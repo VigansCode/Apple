@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apple AI Companion</title>
+    <title>Apple</title>
     <style>
         * {
             margin: 0;
@@ -107,10 +108,6 @@
             letter-spacing: -0.003em;
             color: #1d1d1f;
             margin-bottom: 15px;
-            background: linear-gradient(135deg, #1d1d1f 0%, #007aff 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
         .terminal-subtitle {
@@ -148,21 +145,6 @@
             line-height: 1.47059;
             font-weight: 400;
             letter-spacing: -0.022em;
-            position: absolute;
-            z-index: 10;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 20px;
-            border-radius: 12px;
-            transition: opacity 0.3s ease;
-        }
-
-        .model-placeholder.loading {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
         }
 
         /* Chat Interface */
@@ -172,46 +154,6 @@
             margin: 0 auto;
         }
 
-        .chat-messages {
-            background: #fff;
-            border-radius: 18px;
-            border: 1px solid #e5e5e7;
-            margin-bottom: 20px;
-            max-height: 200px;
-            overflow-y: auto;
-            padding: 20px;
-            display: none;
-        }
-
-        .chat-messages.visible {
-            display: block;
-        }
-
-        .message {
-            margin-bottom: 15px;
-            padding: 12px 16px;
-            border-radius: 18px;
-            max-width: 80%;
-            animation: slideIn 0.3s ease;
-        }
-
-        .message.user {
-            background: #007aff;
-            color: white;
-            margin-left: auto;
-        }
-
-        .message.assistant {
-            background: #f2f2f7;
-            color: #1d1d1f;
-            margin-right: auto;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
         .chat-input-container {
             position: relative;
             background: #fff;
@@ -219,12 +161,6 @@
             border: 1px solid #e5e5e7;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
             overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .chat-input-container:focus-within {
-            border-color: #007aff;
-            box-shadow: 0 2px 20px rgba(0, 122, 255, 0.2);
         }
 
         .chat-input {
@@ -274,12 +210,6 @@
             transform: translateY(-50%) scale(0.95);
         }
 
-        .send-button:disabled {
-            background: #86868b;
-            cursor: not-allowed;
-            transform: translateY(-50%);
-        }
-
         .send-button svg {
             width: 16px;
             height: 16px;
@@ -294,58 +224,12 @@
             font-weight: 400;
             letter-spacing: -0.016em;
             color: #86868b;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .status-indicator {
-            width: 8px;
-            height: 8px;
-            background: #34c759;
-            border-radius: 50%;
-            animation: breathe 2s infinite;
-        }
-
-        @keyframes breathe {
-            0%, 100% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
-
-        /* 3D Model Fallback */
-        .model-fallback {
-            width: 200px;
-            height: 200px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 50%;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 48px;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
         }
 
         /* Responsive */
         @media (max-width: 768px) {
             .nav-items {
                 display: none;
-            }
-            
-            .terminal-title {
-                font-size: 36px;
-            }
-            
-            .model-container {
-                height: 300px;
-                max-width: 100%;
             }
         }
     </style>
@@ -402,8 +286,6 @@
             
             <!-- Chat Interface -->
             <div class="chat-interface">
-                <div class="chat-messages" id="chatMessages"></div>
-                
                 <div class="chat-input-container">
                     <textarea 
                         class="chat-input" 
@@ -418,11 +300,7 @@
                         </svg>
                     </button>
                 </div>
-                
-                <div class="status-text">
-                    <div class="status-indicator"></div>
-                    Ready to help • Privacy protected
-                </div>
+                <p class="status-text">Ready to help • Privacy protected</p>
             </div>
         </section>
     </main>
@@ -433,7 +311,6 @@
         // Auto-resize textarea
         const chatInput = document.getElementById('chatInput');
         const sendButton = document.getElementById('sendButton');
-        const chatMessages = document.getElementById('chatMessages');
         
         chatInput.addEventListener('input', function() {
             this.style.height = 'auto';
