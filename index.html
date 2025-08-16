@@ -530,20 +530,27 @@
         }
         
         function typewriterEffect(element, text, speed = 15) {
+            // Completely clear and reset the element
+            element.innerHTML = '';
             element.textContent = '';
-            element.classList.add('typing');
+            element.classList.remove('typing');
             
-            let i = 0;
-            function type() {
-                if (i < text.length) {
-                    element.textContent += text.charAt(i);
-                    i++;
-                    setTimeout(type, speed);
-                } else {
-                    element.classList.remove('typing');
+            // Small delay to ensure clearing is complete
+            setTimeout(() => {
+                element.classList.add('typing');
+                let i = 0;
+                
+                function type() {
+                    if (i < text.length) {
+                        element.textContent += text.charAt(i);
+                        i++;
+                        setTimeout(type, speed);
+                    } else {
+                        element.classList.remove('typing');
+                    }
                 }
-            }
-            type();
+                type();
+            }, 10);
         }
         
         function closeInfoModal() {
