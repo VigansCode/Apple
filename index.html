@@ -347,10 +347,10 @@
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0xffffff);
             
-            // Camera - Adjusted for eye level view
+            // Camera - Adjusted to show full body at eye level
             camera = new THREE.PerspectiveCamera(75, 600/400, 0.1, 1000);
-            camera.position.set(0, -0.8, 3.2); // Lowered camera Y position
-            camera.lookAt(0, -0.8, 0); // Look at robot's head level
+            camera.position.set(0, -1.2, 4.5); // Pull back and lower to see full body
+            camera.lookAt(0, -1.5, 0); // Look at center of robot
             
             // Renderer
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
