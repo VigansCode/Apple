@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -154,6 +153,46 @@
             margin: 0 auto;
         }
 
+        .chat-messages {
+            background: #fff;
+            border-radius: 18px;
+            border: 1px solid #e5e5e7;
+            margin-bottom: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 20px;
+            display: none;
+        }
+
+        .chat-messages.visible {
+            display: block;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            border-radius: 18px;
+            max-width: 80%;
+            animation: slideIn 0.3s ease;
+        }
+
+        .message.user {
+            background: #007aff;
+            color: white;
+            margin-left: auto;
+        }
+
+        .message.assistant {
+            background: #f2f2f7;
+            color: #1d1d1f;
+            margin-right: auto;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .chat-input-container {
             position: relative;
             background: #fff;
@@ -208,6 +247,12 @@
 
         .send-button:active {
             transform: translateY(-50%) scale(0.95);
+        }
+
+        .send-button:disabled {
+            background: #86868b;
+            cursor: not-allowed;
+            transform: translateY(-50%);
         }
 
         .send-button svg {
@@ -286,6 +331,8 @@
             
             <!-- Chat Interface -->
             <div class="chat-interface">
+                <div class="chat-messages" id="chatMessages"></div>
+                
                 <div class="chat-input-container">
                     <textarea 
                         class="chat-input" 
@@ -311,20 +358,50 @@
         // Auto-resize textarea
         const chatInput = document.getElementById('chatInput');
         const sendButton = document.getElementById('sendButton');
+        const chatMessages = document.getElementById('chatMessages');
         
         chatInput.addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = Math.min(this.scrollHeight, 120) + 'px';
         });
         
+        // Add message to chat
+        function addMessage(content, isUser = false) {
+            const message = document.createElement('div');
+            message.className = `message ${isUser ? 'user' : 'assistant'}`;
+            message.textContent = content;
+            
+            chatMessages.appendChild(message);
+            chatMessages.classList.add('visible');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Mock AI responses
+        const responses = [
+            "Hello! I'm your AI companion. How can I assist you today?",
+            "That's an interesting question! Let me think about that...",
+            "I'm here to help you with whatever you need. What would you like to explore?",
+            "Great question! I'd be happy to help you with that.",
+            "I understand what you're asking. Here's what I think...",
+            "That's a thoughtful inquiry. Let me provide some insights."
+        ];
+        
         // Send message functionality
         function sendMessage() {
             const message = chatInput.value.trim();
             if (message) {
-                console.log('Sending message:', message);
-                // Here you'll integrate with your AI companion
+                // Add user message
+                addMessage(message, true);
                 chatInput.value = '';
                 chatInput.style.height = 'auto';
+                
+                // Simulate AI thinking
+                sendButton.disabled = true;
+                setTimeout(() => {
+                    const response = responses[Math.floor(Math.random() * responses.length)];
+                    addMessage(response, false);
+                    sendButton.disabled = false;
+                }, 1000 + Math.random() * 2000);
             }
         }
         
