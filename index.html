@@ -372,68 +372,73 @@
             modelContainer.innerHTML = '';
             modelContainer.appendChild(renderer.domElement);
             
-            // Create a simple robot for demonstration since robot.glb might not be available
-            createSimpleRobot();
+            // Update placeholder to show loading
+            const loadingText = document.createElement('p');
+            loadingText.className = 'model-placeholder';
+            loadingText.textContent = 'Loading robot model...';
+            loadingText.style.position = 'absolute';
+            loadingText.style.top = '50%';
+            loadingText.style.left = '50%';
+            loadingText.style.transform = 'translate(-50%, -50%)';
+            loadingText.style.zIndex = '10';
+            modelContainer.style.position = 'relative';
+            modelContainer.appendChild(loadingText);
             
-            // Start render loop
-            animate();
-        }
-        
-        function createSimpleRobot() {
-            const robotGroup = new THREE.Group();
+            // Load GLB Model
+            console.log('Loading robot.glb...');
+            const loader = new THREE.GLTFLoader();
             
-            // Head
-            const headGeometry = new THREE.SphereGeometry(0.5, 32, 32);
-            const headMaterial = new THREE.MeshLambertMaterial({ color: 0xcccccc });
-            const head = new THREE.Mesh(headGeometry, headMaterial);
-            head.position.y = 0.8;
-            head.castShadow = true;
-            robotGroup.add(head);
-            
-            // Eyes
-            const eyeGeometry = new THREE.SphereGeometry(0.1, 16, 16);
-            const eyeMaterial = new THREE.MeshLambertMaterial({ color: 0x0066ff });
-            
-            const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
-            leftEye.position.set(-0.2, 0.9, 0.4);
-            robotGroup.add(leftEye);
-            
-            const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
-            rightEye.position.set(0.2, 0.9, 0.4);
-            robotGroup.add(rightEye);
-            
-            // Body
-            const bodyGeometry = new THREE.CylinderGeometry(0.4, 0.5, 1.2, 16);
-            const bodyMaterial = new THREE.MeshLambertMaterial({ color: 0xaaaaaa });
-            const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
-            body.position.y = -0.2;
-            body.castShadow = true;
-            robotGroup.add(body);
-            
-            // Arms
-            const armGeometry = new THREE.CylinderGeometry(0.1, 0.1, 0.8, 8);
-            const armMaterial = new THREE.MeshLambertMaterial({ color: 0x999999 });
-            
-            const leftArm = new THREE.Mesh(armGeometry, armMaterial);
-            leftArm.position.set(-0.6, 0, 0);
-            leftArm.rotation.z = Math.PI / 6;
-            leftArm.castShadow = true;
-            robotGroup.add(leftArm);
-            
-            const rightArm = new THREE.Mesh(armGeometry, armMaterial);
-            rightArm.position.set(0.6, 0, 0);
-            rightArm.rotation.z = -Math.PI / 6;
-            rightArm.castShadow = true;
-            robotGroup.add(rightArm);
-            
-            // Position the robot
-            robotGroup.position.set(0, -1.8, 0);
-            robotGroup.scale.set(1.5, 1.5, 1.5);
-            
-            scene.add(robotGroup);
-            robot = robotGroup;
-            
-            console.log('Simple robot created and added to scene');
+            loader.load(
+                './robot.glb',
+                function(gltf) {
+                    console.log('GLB loaded successfully!', gltf);
+                    
+                    // Remove loading text
+                    if (loadingText) loadingText.remove();
+                    
+                    robot = gltf.scene;
+                    
+                    // Scale and position the robot
+                    robot.scale.set(4, 4, 4);
+                    robot.position.set(0, -1.8, 0);
+                    
+                    // Enable shadows
+                    robot.traverse(function(child) {
+                        if (child.isMesh) {
+                            child.castShadow = true;
+                            child.receiveShadow = true;
+                        }
+                    });
+                    
+                    scene.add(robot);
+                    console.log('Robot added to scene');
+                    
+                    // Start animation if available
+                    if (gltf.animations && gltf.animations.length > 0) {
+                        console.log('Found animations:', gltf.animations.length);
+                        mixer = new THREE.AnimationMixer(robot);
+                        const action = mixer.clipAction(gltf.animations[0]);
+                        action.play();
+                    }
+                    
+                    // Start render loop
+                    animate();
+                },
+                function(progress) {
+                    const percentage = Math.round((progress.loaded / progress.total) * 100);
+                    console.log('Loading progress:', percentage + '%');
+                    if (loadingText) {
+                        loadingText.textContent = `Loading robot model... ${percentage}%`;
+                    }
+                },
+                function(error) {
+                    console.error('Error loading GLB file:', error);
+                    if (loadingText) {
+                        loadingText.textContent = 'Error: Could not load robot.glb. Check console for details.';
+                        loadingText.style.color = '#ff3b30';
+                    }
+                }
+            );
         }
         
         function animate() {
