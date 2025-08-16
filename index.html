@@ -31,13 +31,18 @@
             width: 80px;
             height: 80px;
             margin: 0 auto 20px;
-            background: #007aff;
+            background: linear-gradient(135deg, #007aff 0%, #0051d5 100%);
             border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
             color: white;
+        }
+        
+        .device-icon svg {
+            width: 40px;
+            height: 40px;
+            fill: white;
         }<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -631,17 +636,33 @@
             
             <div class="product-showcase">
                 <div class="device-preview">
-                    <div class="device-icon">📱</div>
+                    <div class="device-icon">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <rect x="5" y="2" width="14" height="20" rx="2" ry="2" stroke="currentColor" stroke-width="2"/>
+                            <line x1="12" y1="18" x2="12.01" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
                     <h4>iPhone</h4>
                     <p>Intelligence in your pocket</p>
                 </div>
                 <div class="device-preview">
-                    <div class="device-icon">💻</div>
+                    <div class="device-icon">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2" stroke="currentColor" stroke-width="2"/>
+                            <line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2"/>
+                            <line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
                     <h4>Mac</h4>
                     <p>Power for professionals</p>
                 </div>
                 <div class="device-preview">
-                    <div class="device-icon">📟</div>
+                    <div class="device-icon">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <rect x="4" y="2" width="16" height="20" rx="2" ry="2" stroke="currentColor" stroke-width="2"/>
+                            <line x1="12" y1="18" x2="12.01" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
                     <h4>iPad</h4>
                     <p>Creativity unleashed</p>
                 </div>
@@ -699,76 +720,6 @@
                     <h3>Data Insights</h3>
                     <p>Discover patterns and insights in your personal data to make better decisions.</p>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Technical Specs -->
-    <section class="specs-section">
-        <div class="specs-container">
-            <h2 class="section-headline">Tech Specs</h2>
-            <div class="specs-grid">
-                <div class="spec-category">
-                    <h4>System Requirements</h4>
-                    <ul class="spec-list">
-                        <li>iPhone 15 Pro or later</li>
-                        <li>iPad Pro (M1) or later</li>
-                        <li>MacBook Pro (M1) or later</li>
-                        <li>macOS Sequoia 15.4 or later</li>
-                        <li>iOS 18.4 or later</li>
-                        <li>iPadOS 18.4 or later</li>
-                    </ul>
-                </div>
-                <div class="spec-category">
-                    <h4>Languages</h4>
-                    <ul class="spec-list">
-                        <li>English (US, UK, AU, CA)</li>
-                        <li>Spanish (US, ES, MX)</li>
-                        <li>French (FR, CA)</li>
-                        <li>German</li>
-                        <li>Italian</li>
-                        <li>Portuguese (BR)</li>
-                        <li>Japanese</li>
-                        <li>Korean</li>
-                        <li>Chinese (Simplified, Traditional)</li>
-                    </ul>
-                </div>
-                <div class="spec-category">
-                    <h4>Privacy & Security</h4>
-                    <ul class="spec-list">
-                        <li>On-device processing</li>
-                        <li>Private Cloud Compute</li>
-                        <li>End-to-end encryption</li>
-                        <li>Secure Enclave protection</li>
-                        <li>Zero data collection</li>
-                        <li>Differential privacy</li>
-                    </ul>
-                </div>
-                <div class="spec-category">
-                    <h4>Core Features</h4>
-                    <ul class="spec-list">
-                        <li>Natural language processing</li>
-                        <li>Image understanding</li>
-                        <li>Predictive text and completion</li>
-                        <li>Smart scheduling</li>
-                        <li>Contextual suggestions</li>
-                        <li>Cross-app integration</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Availability -->
-    <section class="availability">
-        <div class="availability-container">
-            <p class="section-eyebrow">Coming</p>
-            <h2 class="section-headline">Spring 2025</h2>
-            <p class="price-large">Free</p>
-            <p class="availability-note">Available as a free software update for compatible devices.<br>Beta preview starts February 2025.</p>
-            <div class="hero-cta">
-                <button class="cta-primary">Get Notified</button>
-                <a href="#" class="cta-secondary">Developer Preview</a>
             </div>
         </div>
     </section>
