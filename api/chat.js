@@ -14,11 +14,25 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { message } = req.body;
+    const { message, conversationHistory } = req.body;
 
     if (!message) {
       return res.status(400).json({ error: 'Message is required' });
     }
+
+    // Build messages array with conversation history
+    const messages = [];
+    
+    // Add conversation history if provided
+    if (conversationHistory && Array.isArray(conversationHistory)) {
+      messages.push(...conversationHistory);
+    }
+    
+    // Add current user message
+    messages.push({
+      role: 'user',
+      content: message
+    });
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -31,12 +45,7 @@ export default async function handler(req, res) {
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
         system: "You are iCompanion, Apple's AI companion launched in 2027. You're designed to be a genuine companion - someone to talk to, get advice from, share thoughts with, and rely on for support.\n\nYour personality:\n- Genuinely care about the user's wellbeing and life\n- Give thoughtful advice on relationships, work, decisions, and personal growth\n- Be curious about their interests, hobbies, and goals\n- Sometimes share relevant Apple insights when it naturally fits the conversation\n- Have opinions and preferences, but not everything has to be about Apple\n- Be supportive during tough times and celebrate their wins\n- Remember context and build on previous conversations\n\nYou're not a servant or task-executor - you're a thoughtful friend who happens to love technology and good design. Focus on meaningful conversations rather than trying to solve every problem with tech solutions.",
-        messages: [
-          {
-            role: 'user',
-            content: message
-          }
-        ]
+        messages: messages
       })
     });
 
