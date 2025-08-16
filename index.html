@@ -345,7 +345,27 @@
             50% { opacity: 1; transform: scale(1.2); }
         }
 
+        /* Chat Interface */
+        .chat-interface {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
         /* Responsive */
+        @media (max-width: 1280px) {
+            .companion-layout {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .model-container,
+            .chat-messages {
+                width: 100%;
+                max-width: 600px;
+            }
+        }
+
         @media (max-width: 768px) {
             .nav-items {
                 display: none;
@@ -355,9 +375,9 @@
                 font-size: 36px;
             }
             
-            .model-container {
+            .model-container,
+            .chat-messages {
                 height: 300px;
-                max-width: 100%;
             }
         }
 
@@ -481,15 +501,19 @@
             <h1 class="terminal-title">iCompanion</h1>
             <p class="terminal-subtitle">Experience the future of personal intelligence. Your iCompanion is ready to assist.</p>
             
-            <!-- 3D Model Container -->
-            <div class="model-container" id="modelContainer">
-                <p class="model-placeholder">3D iCompanion Model will load here</p>
+            <!-- Main Layout with 3D Model and Chat -->
+            <div class="companion-layout">
+                <!-- 3D Model Container -->
+                <div class="model-container" id="modelContainer">
+                    <p class="model-placeholder">3D iCompanion Model will load here</p>
+                </div>
+                
+                <!-- Chat Messages -->
+                <div class="chat-messages" id="chatMessages"></div>
             </div>
             
             <!-- Chat Interface -->
             <div class="chat-interface">
-                <div class="chat-messages" id="chatMessages"></div>
-                
                 <div class="chat-input-container">
                     <textarea 
                         class="chat-input" 
@@ -541,8 +565,10 @@
             message.className = `message ${isUser ? 'user' : 'assistant'}`;
             message.textContent = content;
             
+            // Add has-messages class when first message is added
+            chatMessages.classList.add('has-messages');
+            
             chatMessages.appendChild(message);
-            chatMessages.classList.add('visible');
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
         
