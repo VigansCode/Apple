@@ -529,7 +529,15 @@
             typewriterEffect(text, description);
         }
         
+        // Global variable to track typewriter
+        let typewriterTimeout;
+        
         function typewriterEffect(element, text, speed = 15) {
+            // Clear any existing typewriter
+            if (typewriterTimeout) {
+                clearTimeout(typewriterTimeout);
+            }
+            
             // Completely clear and reset the element
             element.innerHTML = '';
             element.textContent = '';
@@ -544,9 +552,10 @@
                     if (i < text.length) {
                         element.textContent += text.charAt(i);
                         i++;
-                        setTimeout(type, speed);
+                        typewriterTimeout = setTimeout(type, speed);
                     } else {
                         element.classList.remove('typing');
+                        typewriterTimeout = null;
                     }
                 }
                 type();
@@ -554,7 +563,20 @@
         }
         
         function closeInfoModal() {
+            // Stop any running typewriter
+            if (typewriterTimeout) {
+                clearTimeout(typewriterTimeout);
+                typewriterTimeout = null;
+            }
+            
             const modal = document.getElementById('infoModal');
+            const text = document.getElementById('modalText');
+            
+            // Clean up the text element
+            text.innerHTML = '';
+            text.textContent = '';
+            text.classList.remove('typing');
+            
             modal.classList.remove('visible');
         }
         
