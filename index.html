@@ -349,7 +349,7 @@
             
             // Camera
             camera = new THREE.PerspectiveCamera(75, 600/400, 0.1, 1000);
-            camera.position.set(0, 0, 3);
+            camera.position.set(0, 0, 4);
             camera.lookAt(0, -1, 0);
             
             // Renderer
@@ -399,8 +399,8 @@
                     robot = gltf.scene;
                     
                     // Scale and position the robot
-                    robot.scale.set(5, 5, 5);
-                    robot.position.set(0, -2.8, 0);
+                    robot.scale.set(4, 4, 4);
+                    robot.position.set(0, -3.2, 0);
                     
                     // Enable shadows
                     robot.traverse(function(child) {
