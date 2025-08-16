@@ -358,12 +358,26 @@
             align-items: center;
             justify-content: center;
             z-index: 9999;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
         }
 
         .loading-screen.hidden {
             opacity: 0;
             visibility: hidden;
+        }
+
+        /* Hide main content initially */
+        body.loading .nav,
+        body.loading .main-content {
+            opacity: 0;
+        }
+
+        body:not(.loading) .nav,
+        body:not(.loading) .main-content {
+            opacity: 1;
+            transition: opacity 0.5s ease;
         }
 
         .loading-logo {
@@ -428,11 +442,14 @@
         window.addEventListener('load', function() {
             console.log('Page loaded, starting Three.js initialization...');
             
-            // Hide loading screen after a delay
+            // Hide loading screen and show main content after delay
             setTimeout(() => {
                 const loadingScreen = document.getElementById('loadingScreen');
+                const body = document.body;
+                
                 loadingScreen.classList.add('hidden');
-            }, 2000);
+                body.classList.remove('loading');
+            }, 2500);
             
             initThreeJS();
         });
@@ -540,7 +557,7 @@
         }
     </style>
 </head>
-<body>
+<body class="loading">
     <!-- Navigation -->
     <nav class="nav">
         <div class="nav-inner">
