@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apple</title>
+    <title>Apple AI Companion</title>
     <style>
         * {
             margin: 0;
@@ -108,6 +107,10 @@
             letter-spacing: -0.003em;
             color: #1d1d1f;
             margin-bottom: 15px;
+            background: linear-gradient(135deg, #1d1d1f 0%, #007aff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .terminal-subtitle {
@@ -145,6 +148,21 @@
             line-height: 1.47059;
             font-weight: 400;
             letter-spacing: -0.022em;
+            position: absolute;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 12px;
+            transition: opacity 0.3s ease;
+        }
+
+        .model-placeholder.loading {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
         }
 
         /* Chat Interface */
@@ -154,6 +172,46 @@
             margin: 0 auto;
         }
 
+        .chat-messages {
+            background: #fff;
+            border-radius: 18px;
+            border: 1px solid #e5e5e7;
+            margin-bottom: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 20px;
+            display: none;
+        }
+
+        .chat-messages.visible {
+            display: block;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            border-radius: 18px;
+            max-width: 80%;
+            animation: slideIn 0.3s ease;
+        }
+
+        .message.user {
+            background: #007aff;
+            color: white;
+            margin-left: auto;
+        }
+
+        .message.assistant {
+            background: #f2f2f7;
+            color: #1d1d1f;
+            margin-right: auto;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .chat-input-container {
             position: relative;
             background: #fff;
@@ -161,6 +219,12 @@
             border: 1px solid #e5e5e7;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
             overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input-container:focus-within {
+            border-color: #007aff;
+            box-shadow: 0 2px 20px rgba(0, 122, 255, 0.2);
         }
 
         .chat-input {
@@ -210,6 +274,12 @@
             transform: translateY(-50%) scale(0.95);
         }
 
+        .send-button:disabled {
+            background: #86868b;
+            cursor: not-allowed;
+            transform: translateY(-50%);
+        }
+
         .send-button svg {
             width: 16px;
             height: 16px;
@@ -224,12 +294,58 @@
             font-weight: 400;
             letter-spacing: -0.016em;
             color: #86868b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            background: #34c759;
+            border-radius: 50%;
+            animation: breathe 2s infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* 3D Model Fallback */
+        .model-fallback {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
 
         /* Responsive */
         @media (max-width: 768px) {
             .nav-items {
                 display: none;
+            }
+            
+            .terminal-title {
+                font-size: 36px;
+            }
+            
+            .model-container {
+                height: 300px;
+                max-width: 100%;
             }
         }
     </style>
@@ -281,11 +397,18 @@
             
             <!-- 3D Model Container -->
             <div class="model-container" id="modelContainer">
-                <p class="model-placeholder">3D AI Companion Model will load here</p>
+                <div class="model-placeholder loading" id="modelPlaceholder">
+                    <div style="text-align: center;">
+                        <div style="font-size: 24px; margin-bottom: 8px;">🤖</div>
+                        <div>AI Companion Loading...</div>
+                    </div>
+                </div>
             </div>
             
             <!-- Chat Interface -->
             <div class="chat-interface">
+                <div class="chat-messages" id="chatMessages"></div>
+                
                 <div class="chat-input-container">
                     <textarea 
                         class="chat-input" 
@@ -300,31 +423,69 @@
                         </svg>
                     </button>
                 </div>
-                <p class="status-text">Ready to help • Privacy protected</p>
+                
+                <div class="status-text">
+                    <div class="status-indicator"></div>
+                    Ready to help • Privacy protected
+                </div>
             </div>
         </section>
     </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script>
-        // Auto-resize textarea
+        // Chat functionality
         const chatInput = document.getElementById('chatInput');
         const sendButton = document.getElementById('sendButton');
+        const chatMessages = document.getElementById('chatMessages');
+        const modelContainer = document.getElementById('modelContainer');
+        const modelPlaceholder = document.getElementById('modelPlaceholder');
         
+        let scene, camera, renderer, companion, animationId;
+        
+        // Auto-resize textarea
         chatInput.addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = Math.min(this.scrollHeight, 120) + 'px';
         });
         
+        // Add message to chat
+        function addMessage(content, isUser = false) {
+            const message = document.createElement('div');
+            message.className = `message ${isUser ? 'user' : 'assistant'}`;
+            message.textContent = content;
+            
+            chatMessages.appendChild(message);
+            chatMessages.classList.add('visible');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Mock AI responses
+        const responses = [
+            "Hello! I'm your AI companion. How can I assist you today?",
+            "That's an interesting question! Let me think about that...",
+            "I'm here to help you with whatever you need. What would you like to explore?",
+            "Great question! I'd be happy to help you with that.",
+            "I understand what you're asking. Here's what I think...",
+            "That's a thoughtful inquiry. Let me provide some insights."
+        ];
+        
         // Send message functionality
         function sendMessage() {
             const message = chatInput.value.trim();
             if (message) {
-                console.log('Sending message:', message);
-                // Here you'll integrate with your AI companion
+                // Add user message
+                addMessage(message, true);
                 chatInput.value = '';
                 chatInput.style.height = 'auto';
+                
+                // Simulate AI thinking
+                sendButton.disabled = true;
+                setTimeout(() => {
+                    const response = responses[Math.floor(Math.random() * responses.length)];
+                    addMessage(response, false);
+                    sendButton.disabled = false;
+                }, 1000 + Math.random() * 2000);
             }
         }
         
@@ -338,11 +499,8 @@
         });
         
         // Three.js Scene Setup
-        const modelContainer = document.getElementById('modelContainer');
-        let scene, camera, renderer, robot, mixer;
-        
         function initThreeJS() {
-            console.log('Initializing Three.js...');
+            console.log('Initializing Three.js scene...');
             
             // Scene
             scene = new THREE.Scene();
@@ -350,8 +508,7 @@
             
             // Camera
             camera = new THREE.PerspectiveCamera(75, 600/400, 0.1, 1000);
-            camera.position.set(0, 0, 3.2);
-            camera.lookAt(0, 0, 0);
+            camera.position.set(0, 0, 5);
             
             // Renderer
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -365,111 +522,116 @@
             scene.add(ambientLight);
             
             const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            directionalLight.position.set(10, 10, 5);
+            directionalLight.position.set(5, 5, 5);
             directionalLight.castShadow = true;
             scene.add(directionalLight);
             
+            // Create a simple geometric companion as fallback
+            createGeometricCompanion();
+            
             // Clear placeholder and add renderer
-            modelContainer.innerHTML = '';
-            modelContainer.appendChild(renderer.domElement);
-            
-            // Update placeholder to show loading
-            const loadingText = document.createElement('p');
-            loadingText.className = 'model-placeholder';
-            loadingText.textContent = 'Loading robot model...';
-            loadingText.style.position = 'absolute';
-            loadingText.style.top = '50%';
-            loadingText.style.left = '50%';
-            loadingText.style.transform = 'translate(-50%, -50%)';
-            loadingText.style.zIndex = '10';
-            modelContainer.style.position = 'relative';
-            modelContainer.appendChild(loadingText);
-            
-            // Load GLB Model
-            console.log('Loading robot.glb...');
-            const loader = new THREE.GLTFLoader();
-            
-            loader.load(
-                './robot.glb',
-                function(gltf) {
-                    console.log('GLB loaded successfully!', gltf);
-                    
-                    // Remove loading text
-                    if (loadingText) loadingText.remove();
-                    
-                    robot = gltf.scene;
-                    
-                    // Scale and position the robot
-                    robot.scale.set(4, 4, 4);
-                    robot.position.set(0, -1.8, 0);
-                    
-                    // Enable shadows
-                    robot.traverse(function(child) {
-                        if (child.isMesh) {
-                            child.castShadow = true;
-                            child.receiveShadow = true;
-                        }
-                    });
-                    
-                    scene.add(robot);
-                    console.log('Robot added to scene');
-                    
-                    // Start animation if available
-                    if (gltf.animations && gltf.animations.length > 0) {
-                        console.log('Found animations:', gltf.animations.length);
-                        mixer = new THREE.AnimationMixer(robot);
-                        const action = mixer.clipAction(gltf.animations[0]);
-                        action.play();
-                    }
-                    
-                    // Start render loop
+            setTimeout(() => {
+                modelPlaceholder.style.opacity = '0';
+                setTimeout(() => {
+                    modelContainer.innerHTML = '';
+                    modelContainer.appendChild(renderer.domElement);
                     animate();
-                },
-                function(progress) {
-                    const percentage = Math.round((progress.loaded / progress.total) * 100);
-                    console.log('Loading progress:', percentage + '%');
-                    if (loadingText) {
-                        loadingText.textContent = `Loading robot model... ${percentage}%`;
-                    }
-                },
-                function(error) {
-                    console.error('Error loading GLB file:', error);
-                    if (loadingText) {
-                        loadingText.textContent = 'Error: Could not load robot.glb. Check console for details.';
-                        loadingText.style.color = '#ff3b30';
-                    }
-                }
-            );
+                }, 300);
+            }, 2000);
+        }
+        
+        function createGeometricCompanion() {
+            const group = new THREE.Group();
             
-            function animate() {
-                requestAnimationFrame(animate);
-                
-                if (mixer) {
-                    mixer.update(0.016); // ~60fps
-                }
-                
-                // Rotate robot slowly
-                if (robot) {
-                    robot.rotation.y += 0.01;
-                }
-                
-                renderer.render(scene, camera);
+            // Body
+            const bodyGeometry = new THREE.CapsuleGeometry ? 
+                new THREE.CapsuleGeometry(0.8, 1.2, 4, 8) : 
+                new THREE.CylinderGeometry(0.8, 0.8, 1.2, 8);
+            const bodyMaterial = new THREE.MeshLambertMaterial({ 
+                color: 0x007aff,
+                transparent: true,
+                opacity: 0.9
+            });
+            const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+            group.add(body);
+            
+            // Head
+            const headGeometry = new THREE.SphereGeometry(0.6, 16, 16);
+            const headMaterial = new THREE.MeshLambertMaterial({ 
+                color: 0x667eea,
+                transparent: true,
+                opacity: 0.95
+            });
+            const head = new THREE.Mesh(headGeometry, headMaterial);
+            head.position.y = 1.2;
+            group.add(head);
+            
+            // Eyes
+            const eyeGeometry = new THREE.SphereGeometry(0.1, 8, 8);
+            const eyeMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
+            
+            const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+            leftEye.position.set(-0.2, 1.3, 0.4);
+            group.add(leftEye);
+            
+            const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+            rightEye.position.set(0.2, 1.3, 0.4);
+            group.add(rightEye);
+            
+            // Pupils
+            const pupilGeometry = new THREE.SphereGeometry(0.05, 8, 8);
+            const pupilMaterial = new THREE.MeshLambertMaterial({ color: 0x000000 });
+            
+            const leftPupil = new THREE.Mesh(pupilGeometry, pupilMaterial);
+            leftPupil.position.set(-0.2, 1.3, 0.45);
+            group.add(leftPupil);
+            
+            const rightPupil = new THREE.Mesh(pupilGeometry, pupilMaterial);
+            rightPupil.position.set(0.2, 1.3, 0.45);
+            group.add(rightPupil);
+            
+            // Position and add to scene
+            group.position.set(0, -0.5, 0);
+            scene.add(group);
+            companion = group;
+        }
+        
+        function animate() {
+            animationId = requestAnimationFrame(animate);
+            
+            // Gentle floating animation
+            if (companion) {
+                companion.rotation.y += 0.005;
+                companion.position.y = -0.5 + Math.sin(Date.now() * 0.001) * 0.1;
             }
+            
+            renderer.render(scene, camera);
         }
         
         // Handle window resize
         window.addEventListener('resize', function() {
             if (camera && renderer) {
-                camera.aspect = 600 / 400;
+                const container = modelContainer;
+                const width = container.clientWidth;
+                const height = container.clientHeight;
+                
+                camera.aspect = width / height;
                 camera.updateProjectionMatrix();
-                renderer.setSize(600, 400);
+                renderer.setSize(width, height);
             }
         });
         
-        // Initialize Three.js when page loads
+        // Initialize when page loads
         window.addEventListener('load', function() {
-            console.log('Page loaded, starting Three.js initialization...');
+            console.log('Page loaded, initializing AI companion...');
             initThreeJS();
+        });
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
         });
     </script>
 </body>
