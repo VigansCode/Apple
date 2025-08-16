@@ -282,6 +282,78 @@
                 display: none;
             }
         }
+
+        /* Info Modal */
+        .info-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .info-modal.visible {
+            display: flex;
+        }
+
+        .info-modal-content {
+            background: #fff;
+            border-radius: 18px;
+            border: 1px solid #e5e5e7;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            max-width: 500px;
+            width: 90%;
+            padding: 40px;
+            text-align: center;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: scale(0.9) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .info-modal-title {
+            font-size: 28px;
+            line-height: 1.14286;
+            font-weight: 600;
+            letter-spacing: 0.007em;
+            color: #1d1d1f;
+            margin-bottom: 20px;
+        }
+
+        .info-modal-text {
+            font-size: 17px;
+            line-height: 1.47059;
+            font-weight: 400;
+            letter-spacing: -0.022em;
+            color: #86868b;
+            margin-bottom: 30px;
+        }
+
+        .info-modal-close {
+            background: #007aff;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+            font-size: 17px;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .info-modal-close:hover {
+            background: #0051d5;
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
@@ -294,9 +366,9 @@
                 </svg>
             </a>
             <ul class="nav-items">
-                <li><a href="#">Vision</a></li>
-                <li><a href="#">Companion</a></li>
-                <li><a href="#">Support</a></li>
+                <li><a href="#" onclick="showInfoModal('vision')">Vision</a></li>
+                <li><a href="#" onclick="showInfoModal('companion')">Companion</a></li>
+                <li><a href="#" onclick="showInfoModal('support')">Support</a></li>
             </ul>
             <div class="nav-right">
                 <a href="#" class="nav-search">
@@ -343,6 +415,15 @@
             </div>
         </section>
     </main>
+
+    <!-- Info Modal -->
+    <div class="info-modal" id="infoModal">
+        <div class="info-modal-content">
+            <h2 class="info-modal-title" id="modalTitle">Title</h2>
+            <p class="info-modal-text" id="modalText">Description text goes here.</p>
+            <button class="info-modal-close" onclick="closeInfoModal()">Close</button>
+        </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
@@ -403,6 +484,49 @@
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 sendMessage();
+            }
+        });
+
+        // Info Modal Functions
+        function showInfoModal(type) {
+            const modal = document.getElementById('infoModal');
+            const title = document.getElementById('modalTitle');
+            const text = document.getElementById('modalText');
+            
+            switch(type) {
+                case 'vision':
+                    title.textContent = 'Vision';
+                    text.textContent = 'Add your Vision description here.';
+                    break;
+                case 'companion':
+                    title.textContent = 'Companion';
+                    text.textContent = 'Add your Companion description here.';
+                    break;
+                case 'support':
+                    title.textContent = 'Support';
+                    text.textContent = 'Add your Support description here.';
+                    break;
+            }
+            
+            modal.classList.add('visible');
+        }
+        
+        function closeInfoModal() {
+            const modal = document.getElementById('infoModal');
+            modal.classList.remove('visible');
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('infoModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeInfoModal();
+            }
+        });
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeInfoModal();
             }
         });
         
