@@ -508,44 +508,22 @@
             const title = document.getElementById('modalTitle');
             const text = document.getElementById('modalText');
             
-            let description = '';
-            
             switch(type) {
                 case 'vision':
                     title.textContent = 'Vision';
-                    description = 'Prepare for the impossible.\n\n2027:\nYour iCompanion becomes your home brain - controlling every device with a single glance, predicting your needs hours before you have them, and creating personalized environments that adapt in real-time to your emotions. Imagine walking into a room and having the perfect lighting, temperature, music, and even scent automatically configured based on your stress levels and daily goals.\n\n2028:\nRevolutionary health breakthrough - your iCompanion detects health issues weeks before symptoms appear through micro-expressions, voice patterns, and behavioral changes. It connects directly with medical professionals worldwide, potentially saving millions of lives through early intervention. Plus, it becomes your personal nutritionist, creating custom meals using robotic kitchen assistants.\n\n2029:\nTransform into a productivity powerhouse - attend meetings as a holographic presence, have your iCompanion negotiate deals while you sleep, and watch it manage entire business operations autonomously. For families, it becomes an AI nanny that teaches children multiple languages fluently and provides personalized education that adapts to each child learning style in real-time.\n\n2030:\nThe ultimate financial revolution - your iCompanion becomes your personal financial advisor, analyzing market sentiment and viral social media trends to recommend smart investments in stocks, crypto, and emerging memecoins. It provides personalized portfolio strategies for everyone from crypto enthusiasts to complete beginners, helping you discover the next moonshot token before it goes viral while securing your retirement through intelligent traditional investments.\n\nImagine having a Wall Street expert in your living room, turning your spare change into wealth through expert guidance. This is not just technology. This is human potential unleashed, making millionaires out of ordinary people.';
+                    text.textContent = 'Prepare for the impossible.\n\n2027:\nYour iCompanion becomes your home brain - controlling every device with a single glance, predicting your needs hours before you have them, and creating personalized environments that adapt in real-time to your emotions. Imagine walking into a room and having the perfect lighting, temperature, music, and even scent automatically configured based on your stress levels and daily goals.\n\n2028:\nRevolutionary health breakthrough - your iCompanion detects health issues weeks before symptoms appear through micro-expressions, voice patterns, and behavioral changes. It connects directly with medical professionals worldwide, potentially saving millions of lives through early intervention. Plus, it becomes your personal nutritionist, creating custom meals using robotic kitchen assistants.\n\n2029:\nTransform into a productivity powerhouse - attend meetings as a holographic presence, have your iCompanion negotiate deals while you sleep, and watch it manage entire business operations autonomously. For families, it becomes an AI nanny that teaches children multiple languages fluently and provides personalized education that adapts to each child learning style in real-time.\n\n2030:\nThe ultimate financial revolution - your iCompanion becomes your personal financial advisor, analyzing market sentiment and viral social media trends to recommend smart investments in stocks, crypto, and emerging memecoins. It provides personalized portfolio strategies for everyone from crypto enthusiasts to complete beginners, helping you discover the next moonshot token before it goes viral while securing your retirement through intelligent traditional investments.\n\nImagine having a Wall Street expert in your living room, turning your spare change into wealth through expert guidance. This is not just technology. This is human potential unleashed, making millionaires out of ordinary people.';
                     break;
                 case 'companion':
                     title.textContent = 'iCompanion';
-                    description = 'Introducing the future of personal computing. iCompanion redefines what it means to have an AI companion. Imagine a device that does not just respond to commands, but truly understands and engages with your world like a trusted friend in the room.\n\nOur revolutionary tabletop companion features an advanced visual personality with an animated Finder-inspired interface, powered by next-generation Siri technology that remembers, learns, and grows with you.\n\nWhether its seamlessly joining conversations to suggest the perfect restaurant, helping plan your next adventure through natural dialogue, or following you around the room during FaceTime calls with Center Stage technology - iCompanion transforms how you interact with technology.\n\nComing 2027, this is not just another device. It is your intelligent companion, designed to be as natural and intuitive as human conversation itself.';
+                    text.textContent = 'Introducing the future of personal computing. iCompanion redefines what it means to have an AI companion. Imagine a device that does not just respond to commands, but truly understands and engages with your world like a trusted friend in the room.\n\nOur revolutionary tabletop companion features an advanced visual personality with an animated Finder-inspired interface, powered by next-generation Siri technology that remembers, learns, and grows with you.\n\nWhether its seamlessly joining conversations to suggest the perfect restaurant, helping plan your next adventure through natural dialogue, or following you around the room during FaceTime calls with Center Stage technology - iCompanion transforms how you interact with technology.\n\nComing 2027, this is not just another device. It is your intelligent companion, designed to be as natural and intuitive as human conversation itself.';
                     break;
                 case 'support':
                     title.textContent = 'Support';
-                    description = 'Add your Support description here.';
+                    text.textContent = 'Add your Support description here.';
                     break;
             }
             
             modal.classList.add('visible');
-            typewriterEffect(text, description);
-        }
-        
-        function typewriterEffect(element, text, speed = 15) {
-            element.innerHTML = '';
-            element.classList.add('typing');
-            
-            let i = 0;
-            const cleanText = text.replace(/[^\x20-\x7E\n]/g, ''); // Remove non-ASCII characters
-            
-            function type() {
-                if (i < cleanText.length) {
-                    element.innerHTML += cleanText.charAt(i);
-                    i++;
-                    setTimeout(type, speed);
-                } else {
-                    element.classList.remove('typing');
-                }
-            }
-            type();
         }
         
         function closeInfoModal() {
