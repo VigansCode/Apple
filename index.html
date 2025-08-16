@@ -305,7 +305,7 @@
     </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script>
         // Auto-resize textarea
         const chatInput = document.getElementById('chatInput');
@@ -338,9 +338,11 @@
         
         // Three.js Scene Setup
         const modelContainer = document.getElementById('modelContainer');
-        let scene, camera, renderer, robot;
+        let scene, camera, renderer, robot, mixer;
         
         function initThreeJS() {
+            console.log('Initializing Three.js...');
+            
             // Scene
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0xffffff);
@@ -369,15 +371,35 @@
             modelContainer.innerHTML = '';
             modelContainer.appendChild(renderer.domElement);
             
+            // Update placeholder to show loading
+            const loadingText = document.createElement('p');
+            loadingText.className = 'model-placeholder';
+            loadingText.textContent = 'Loading robot model...';
+            loadingText.style.position = 'absolute';
+            loadingText.style.top = '50%';
+            loadingText.style.left = '50%';
+            loadingText.style.transform = 'translate(-50%, -50%)';
+            loadingText.style.zIndex = '10';
+            modelContainer.style.position = 'relative';
+            modelContainer.appendChild(loadingText);
+            
             // Load GLB Model
+            console.log('Loading robot.glb...');
             const loader = new THREE.GLTFLoader();
-            loader.load('robot.glb', 
+            
+            loader.load(
+                './robot.glb',
                 function(gltf) {
+                    console.log('GLB loaded successfully!', gltf);
+                    
+                    // Remove loading text
+                    if (loadingText) loadingText.remove();
+                    
                     robot = gltf.scene;
                     
                     // Scale and position the robot
-                    robot.scale.set(1, 1, 1);
-                    robot.position.set(0, 0, 0);
+                    robot.scale.set(2, 2, 2);
+                    robot.position.set(0, -1, 0);
                     
                     // Enable shadows
                     robot.traverse(function(child) {
@@ -388,48 +410,49 @@
                     });
                     
                     scene.add(robot);
+                    console.log('Robot added to scene');
                     
                     // Start animation if available
                     if (gltf.animations && gltf.animations.length > 0) {
-                        const mixer = new THREE.AnimationMixer(robot);
+                        console.log('Found animations:', gltf.animations.length);
+                        mixer = new THREE.AnimationMixer(robot);
                         const action = mixer.clipAction(gltf.animations[0]);
                         action.play();
-                        
-                        // Update mixer in animation loop
-                        function animate() {
-                            requestAnimationFrame(animate);
-                            mixer.update(0.01);
-                            
-                            // Rotate robot slowly
-                            if (robot) {
-                                robot.rotation.y += 0.005;
-                            }
-                            
-                            renderer.render(scene, camera);
-                        }
-                        animate();
-                    } else {
-                        // No animations, just rotate
-                        function animate() {
-                            requestAnimationFrame(animate);
-                            
-                            if (robot) {
-                                robot.rotation.y += 0.01;
-                            }
-                            
-                            renderer.render(scene, camera);
-                        }
-                        animate();
                     }
+                    
+                    // Start render loop
+                    animate();
                 },
                 function(progress) {
-                    console.log('Loading progress:', (progress.loaded / progress.total * 100) + '%');
+                    const percentage = Math.round((progress.loaded / progress.total) * 100);
+                    console.log('Loading progress:', percentage + '%');
+                    if (loadingText) {
+                        loadingText.textContent = `Loading robot model... ${percentage}%`;
+                    }
                 },
                 function(error) {
                     console.error('Error loading GLB file:', error);
-                    modelContainer.innerHTML = '<p class="model-placeholder">Error loading 3D model. Please check the file path.</p>';
+                    if (loadingText) {
+                        loadingText.textContent = 'Error: Could not load robot.glb. Check console for details.';
+                        loadingText.style.color = '#ff3b30';
+                    }
                 }
             );
+            
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                if (mixer) {
+                    mixer.update(0.016); // ~60fps
+                }
+                
+                // Rotate robot slowly
+                if (robot) {
+                    robot.rotation.y += 0.01;
+                }
+                
+                renderer.render(scene, camera);
+            }
         }
         
         // Handle window resize
@@ -442,7 +465,10 @@
         });
         
         // Initialize Three.js when page loads
-        window.addEventListener('load', initThreeJS);
+        window.addEventListener('load', function() {
+            console.log('Page loaded, starting Three.js initialization...');
+            initThreeJS();
+        });
     </script>
 </body>
 </html>
