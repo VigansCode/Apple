@@ -335,6 +335,18 @@
             letter-spacing: -0.022em;
             color: #86868b;
             margin-bottom: 30px;
+            min-height: 50px;
+        }
+
+        .info-modal-text.typing::after {
+            content: '|';
+            animation: blink 1s infinite;
+            color: #007aff;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
         }
 
         .info-modal-close {
@@ -493,22 +505,42 @@
             const title = document.getElementById('modalTitle');
             const text = document.getElementById('modalText');
             
+            let description = '';
+            
             switch(type) {
                 case 'vision':
                     title.textContent = 'Vision';
-                    text.textContent = 'Add your Vision description here.';
+                    description = 'Add your Vision description here.';
                     break;
                 case 'companion':
                     title.textContent = 'Companion';
-                    text.textContent = 'Add your Companion description here.';
+                    description = 'Add your Companion description here.';
                     break;
                 case 'support':
                     title.textContent = 'Support';
-                    text.textContent = 'Add your Support description here.';
+                    description = 'Add your Support description here.';
                     break;
             }
             
             modal.classList.add('visible');
+            typewriterEffect(text, description);
+        }
+        
+        function typewriterEffect(element, text, speed = 50) {
+            element.textContent = '';
+            element.classList.add('typing');
+            
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                } else {
+                    element.classList.remove('typing');
+                }
+            }
+            type();
         }
         
         function closeInfoModal() {
