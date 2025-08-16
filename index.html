@@ -1,4 +1,44 @@
-<!DOCTYPE html>
+.feature-visual {
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+            margin: 40px auto;
+            background: #f5f5f7;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e5e5e7;
+        }
+
+        .product-showcase {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin: 60px 0;
+        }
+
+        .device-preview {
+            background: #fff;
+            border-radius: 20px;
+            padding: 40px 20px;
+            text-align: center;
+            border: 1px solid #e5e5e7;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .device-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: #007aff;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+        }<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,8 +51,10 @@
             box-sizing: border-box;
         }
 
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
         body {
-            font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
             line-height: 1.4705882353;
             font-weight: 400;
             letter-spacing: -0.022em;
@@ -43,9 +85,18 @@
         }
 
         .nav-logo {
-            color: #1d1d1f;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-decoration: none;
-            font-size: 20px;
+        }
+
+        .apple-logo {
+            width: 16px;
+            height: 20px;
+            fill: #1d1d1f;
         }
 
         .nav-items {
@@ -192,12 +243,15 @@
 
         .hero-visual {
             position: absolute;
-            top: 50%;
+            top: 60%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 400px;
-            opacity: 0.03;
+            width: 300px;
+            height: 300px;
+            opacity: 0.1;
             z-index: 1;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDMwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIiByeD0iNDAiIGZpbGw9IiMxZDFkMWYiIGZpbGwtb3BhY2l0eT0iMC4xIi8+Cjx0ZXh0IHg9IjE1MCIgeT0iMTcwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iU0YgUHJvIERpc3BsYXkiIGZvbnQtc2l6ZT0iNjAiIGZpbGw9IiMxZDFkMWYiPkFJPC90ZXh0Pgo8L3N2Zz4K') no-repeat center;
+            background-size: contain;
             animation: float 8s ease-in-out infinite;
         }
 
@@ -518,7 +572,11 @@
     <!-- Navigation -->
     <nav class="nav">
         <div class="nav-inner">
-            <a href="#" class="nav-logo">🍎</a>
+            <a href="#" class="nav-logo">
+                <svg class="apple-logo" viewBox="0 0 814 1000">
+                    <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76.5 0-103.7 40.8-165.9 40.8s-105.6-57-155.5-127C46.7 790.7 0 663 0 541.8c0-194.4 126.4-297.5 250.8-297.5 65.6 0 120.5 43.9 162.2 43.9 40.8 0 103.9-47.18 180.8-47.18 29.6 0 137.3 2.64 186.8 99.64zm-144.4-268.3c35.2-42.5 58.9-101.4 58.9-160.4 0-8.2-.9-16.4-2.6-23.5-56.3 2.6-124.7 37.4-165.8 85.7-33.8 39.2-65.6 101.4-65.6 160.9 0 9.1.9 18.3 1.5 21.1 2.6.6 6.7.9 10.9.9 50.3 0 114.8-33.8 162.7-84.7z"/>
+                </svg>
+            </a>
             <ul class="nav-items">
                 <li><a href="#">Store</a></li>
                 <li><a href="#">Mac</a></li>
@@ -533,8 +591,18 @@
                 <li><a href="#">Support</a></li>
             </ul>
             <div class="nav-right">
-                <a href="#" class="nav-search">🔍</a>
-                <a href="#" class="nav-bag">🛍</a>
+                <a href="#" class="nav-search">
+                    <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+                        <path d="M10.5 6.5C10.5 8.98528 8.48528 11 6 11C3.51472 11 1.5 8.98528 1.5 6.5C1.5 4.01472 3.51472 2 6 2C8.48528 2 10.5 4.01472 10.5 6.5ZM9.5 6.5C9.5 8.433 7.933 10 6 10C4.067 10 2.5 8.433 2.5 6.5C2.5 4.567 4.067 3 6 3C7.933 3 9.5 4.567 9.5 6.5Z" fill="#1d1d1f"/>
+                        <path d="M13.5 13.5L9.5 9.5" stroke="#1d1d1f" stroke-width="1" stroke-linecap="round"/>
+                    </svg>
+                </a>
+                <a href="#" class="nav-bag">
+                    <svg width="14" height="16" viewBox="0 0 14 16" fill="none">
+                        <path d="M11 4H3C2.44772 4 2 4.44772 2 5V13C2 14.1046 2.89543 15 4 15H10C11.1046 15 12 14.1046 12 13V5C12 4.44772 11.5523 4 11 4Z" stroke="#1d1d1f" stroke-width="1"/>
+                        <path d="M5 2C5 1.44772 5.44772 1 6 1H8C8.55228 1 9 1.44772 9 2V4H5V2Z" stroke="#1d1d1f" stroke-width="1"/>
+                    </svg>
+                </a>
             </div>
         </div>
     </nav>
@@ -551,7 +619,7 @@
                 <a href="#features" class="cta-secondary">Learn more</a>
             </div>
         </div>
-        <div class="hero-visual">🤖</div>
+        <div class="hero-visual"></div>
     </section>
 
     <!-- Features Section 1 -->
@@ -560,6 +628,24 @@
             <p class="section-eyebrow">Intelligent by Design</p>
             <h2 class="section-headline">Understands you.<br>Protects you.</h2>
             <p class="section-description">Apple Intelligence learns how you work, communicate, and live — while keeping your personal information completely private on your device.</p>
+            
+            <div class="product-showcase">
+                <div class="device-preview">
+                    <div class="device-icon">📱</div>
+                    <h4>iPhone</h4>
+                    <p>Intelligence in your pocket</p>
+                </div>
+                <div class="device-preview">
+                    <div class="device-icon">💻</div>
+                    <h4>Mac</h4>
+                    <p>Power for professionals</p>
+                </div>
+                <div class="device-preview">
+                    <div class="device-icon">📟</div>
+                    <h4>iPad</h4>
+                    <p>Creativity unleashed</p>
+                </div>
+            </div>
             <div class="feature-grid">
                 <div class="feature-item">
                     <span class="feature-icon">🧠</span>
