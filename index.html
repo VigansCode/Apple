@@ -565,6 +565,9 @@
             message.className = `message ${isUser ? 'user' : 'assistant'}`;
             message.textContent = content;
             
+            // Add has-messages class when first message is added
+            chatMessages.classList.add('has-messages');
+            
             chatMessages.appendChild(message);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
