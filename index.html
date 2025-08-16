@@ -149,6 +149,21 @@
             line-height: 1.47059;
             font-weight: 400;
             letter-spacing: -0.022em;
+            position: absolute;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 12px;
+            transition: opacity 0.3s ease;
+        }
+
+        .model-placeholder.loading {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
         }
 
         /* Chat Interface */
@@ -193,6 +208,13 @@
             margin-right: auto;
         }
 
+        .message.loading {
+            background: #f2f2f7;
+            color: #86868b;
+            font-style: italic;
+            margin-right: auto;
+        }
+
         @keyframes slideIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -205,6 +227,12 @@
             border: 1px solid #e5e5e7;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
             overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input-container:focus-within {
+            border-color: #007aff;
+            box-shadow: 0 2px 20px rgba(0, 122, 255, 0.2);
         }
 
         .chat-input {
@@ -274,12 +302,38 @@
             font-weight: 400;
             letter-spacing: -0.016em;
             color: #86868b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            background: #34c759;
+            border-radius: 50%;
+            animation: breathe 2s infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
         }
 
         /* Responsive */
         @media (max-width: 768px) {
             .nav-items {
                 display: none;
+            }
+            
+            .terminal-title {
+                font-size: 36px;
+            }
+            
+            .model-container {
+                height: 300px;
+                max-width: 100%;
             }
         }
 
@@ -426,7 +480,11 @@
                         </svg>
                     </button>
                 </div>
-                <p class="status-text">Ready to help • Privacy protected</p>
+                
+                <div class="status-text">
+                    <div class="status-indicator"></div>
+                    Ready to help • Privacy protected
+                </div>
             </div>
         </section>
     </main>
@@ -443,7 +501,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script>
-        // Auto-resize textarea
+        // Chat functionality
         const chatInput = document.getElementById('chatInput');
         const sendButton = document.getElementById('sendButton');
         const chatMessages = document.getElementById('chatMessages');
@@ -464,32 +522,70 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
         
-        // Mock AI responses
-        const responses = [
-            "Hello! I'm your iCompanion. How can I assist you today?",
-            "That's an interesting question! Let me think about that...",
-            "I'm here to help you with whatever you need. What would you like to explore?",
-            "Great question! I'd be happy to help you with that.",
-            "I understand what you're asking. Here's what I think...",
-            "That's a thoughtful inquiry. Let me provide some insights."
-        ];
+        // Call Anthropic API through backend
+        async function callAnthropicAPI(userMessage) {
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: userMessage
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                return data.response;
+                
+            } catch (error) {
+                console.error('Error calling API:', error);
+                return 'Sorry, I\'m having trouble connecting right now. Please try again.';
+            }
+        }
         
         // Send message functionality
-        function sendMessage() {
+        async function sendMessage() {
             const message = chatInput.value.trim();
-            if (message) {
+            if (message && !sendButton.disabled) {
                 // Add user message
                 addMessage(message, true);
                 chatInput.value = '';
                 chatInput.style.height = 'auto';
                 
-                // Simulate AI thinking
+                // Disable button while processing
                 sendButton.disabled = true;
-                setTimeout(() => {
-                    const response = responses[Math.floor(Math.random() * responses.length)];
+                
+                // Show loading indicator
+                const loadingMessage = document.createElement('div');
+                loadingMessage.className = 'message loading';
+                loadingMessage.textContent = 'iCompanion is thinking...';
+                chatMessages.appendChild(loadingMessage);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                try {
+                    // Get AI response from API
+                    const response = await callAnthropicAPI(message);
+                    
+                    // Remove loading message
+                    loadingMessage.remove();
+                    
+                    // Add real API response
                     addMessage(response, false);
-                    sendButton.disabled = false;
-                }, 1000 + Math.random() * 2000);
+                } catch (error) {
+                    // Remove loading message
+                    loadingMessage.remove();
+                    
+                    // Show error message
+                    addMessage('Sorry, I\'m having trouble connecting right now. Please try again.', false);
+                }
+                
+                // Re-enable button
+                sendButton.disabled = false;
             }
         }
         
@@ -502,33 +598,6 @@
             }
         });
 
-        // Info Modal Functions
-        function showInfoModal(type) {
-            const modal = document.getElementById('infoModal');
-            const title = document.getElementById('modalTitle');
-            const text = document.getElementById('modalText');
-            
-            let description = '';
-            
-            switch(type) {
-                case 'vision':
-                    title.textContent = 'Vision';
-                    description = 'Prepare for the impossible.\n\n2027:\nYour iCompanion becomes your home brain - controlling every device with a single glance, predicting your needs hours before you have them, and creating personalized environments that adapt in real-time to your emotions.\n\n2028:\nRevolutionary health breakthrough - your iCompanion detects health issues weeks before symptoms appear through micro-expressions, voice patterns, and behavioral changes.\n\n2029:\nTransform into a productivity powerhouse - attend meetings as a holographic presence, have your iCompanion negotiate deals while you sleep, and watch it manage entire business operations autonomously.\n\n2030:\nThe ultimate financial revolution - your iCompanion becomes your personal financial advisor, analyzing market sentiment and viral social media trends to recommend smart investments in stocks, crypto, and emerging memecoins.\n\nThis is not just technology. This is human potential unleashed, making millionaires out of ordinary people.';
-                    break;
-                case 'companion':
-                    title.textContent = 'iCompanion';
-                    description = 'Introducing the future of personal computing. iCompanion redefines what it means to have an AI companion.\n\nOur revolutionary tabletop companion features an advanced visual personality with an animated Finder-inspired interface, powered by next-generation Siri technology.\n\nComing 2027, this is not just another device. It is your intelligent companion, designed to be as natural and intuitive as human conversation itself.';
-                    break;
-                case 'support':
-                    title.textContent = 'Support';
-                    description = 'Add your Support description here.';
-                    break;
-            }
-            
-            modal.classList.add('visible');
-            typewriterEffect(text, description);
-        }
-        
         // Global variable to track typewriter
         let typewriterTimeout;
         
@@ -578,6 +647,33 @@
             text.classList.remove('typing');
             
             modal.classList.remove('visible');
+        }
+        
+        // Info Modal Functions
+        function showInfoModal(type) {
+            const modal = document.getElementById('infoModal');
+            const title = document.getElementById('modalTitle');
+            const text = document.getElementById('modalText');
+            
+            let description = '';
+            
+            switch(type) {
+                case 'vision':
+                    title.textContent = 'Vision';
+                    description = 'Prepare for the impossible.\n\n2027:\nYour iCompanion becomes your home brain - controlling every device with a single glance, predicting your needs hours before you have them, and creating personalized environments that adapt in real-time to your emotions.\n\n2028:\nRevolutionary health breakthrough - your iCompanion detects health issues weeks before symptoms appear through micro-expressions, voice patterns, and behavioral changes.\n\n2029:\nTransform into a productivity powerhouse - attend meetings as a holographic presence, have your iCompanion negotiate deals while you sleep, and watch it manage entire business operations autonomously.\n\n2030:\nThe ultimate financial revolution - your iCompanion becomes your personal financial advisor, analyzing market sentiment and viral social media trends to recommend smart investments in stocks, crypto, and emerging memecoins.\n\nThis is not just technology. This is human potential unleashed, making millionaires out of ordinary people.';
+                    break;
+                case 'companion':
+                    title.textContent = 'iCompanion';
+                    description = 'Introducing the future of personal computing. iCompanion redefines what it means to have an AI companion.\n\nOur revolutionary tabletop companion features an advanced visual personality with an animated Finder-inspired interface, powered by next-generation Siri technology.\n\nComing 2027, this is not just another device. It is your intelligent companion, designed to be as natural and intuitive as human conversation itself.';
+                    break;
+                case 'support':
+                    title.textContent = 'Support';
+                    description = 'Add your Support description here.';
+                    break;
+            }
+            
+            modal.classList.add('visible');
+            typewriterEffect(text, description);
         }
         
         // Close modal when clicking outside
