@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apple Intelligence - Apple</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.4705882353;
+            font-weight: 400;
+            letter-spacing: -0.022em;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(251, 251, 253, 0.8);
+            backdrop-filter: saturate(180%) blur(20px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-inner {
+            max-width: 1024px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 44px;
+            padding: 0 22px;
+        }
+
+        .nav-logo {
+            color: #1d1d1f;
+            text-decoration: none;
+            font-size: 20px;
+        }
+
+        .nav-items {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+        }
+
+        .nav-items a {
+            color: #1d1d1f;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 400;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-items a:hover {
+            opacity: 1;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 18px;
+        }
+
+        .nav-search, .nav-bag {
+            color: #1d1d1f;
+            text-decoration: none;
+            font-size: 16px;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-search:hover, .nav-bag:hover {
+            opacity: 1;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: #f5f5f7;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            z-index: 2;
+            max-width: 980px;
+            padding: 0 40px;
+        }
+
+        .hero-eyebrow {
+            font-size: 17px;
+            line-height: 1.23536;
+            font-weight: 600;
+            letter-spacing: -0.022em;
+            color: #bf4800;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-size: 80px;
+            line-height: 1.05;
+            font-weight: 600;
+            letter-spacing: -0.015em;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, #1d1d1f 0%, #86efac 50%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 28px;
+            line-height: 1.14286;
+            font-weight: 600;
+            letter-spacing: 0.007em;
+            margin-bottom: 19px;
+            color: #86868b;
+        }
+
+        .hero-description {
+            font-size: 21px;
+            line-height: 1.19048;
+            font-weight: 400;
+            letter-spacing: 0.011em;
+            margin-bottom: 30px;
+            color: #86868b;
+        }
+
+        .hero-cta {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .cta-primary {
+            background: #0071e3;
+            color: #fff;
+            padding: 12px 23px;
+            border-radius: 980px;
+            text-decoration: none;
+            font-size: 17px;
+            line-height: 1.23536;
+            font-weight: 400;
+            letter-spacing: -0.022em;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-primary:hover {
+            background: #0077ed;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(0, 113, 227, 0.4);
+        }
+
+        .cta-secondary {
+            color: #2997ff;
+            text-decoration: none;
+            font-size: 21px;
+            line-height: 1.19048;
+            font-weight: 400;
+            letter-spacing: 0.011em;
+            transition: opacity 0.3s ease;
+        }
+
+        .cta-secondary:hover {
+            text-decoration: underline;
+        }
+
+        .cta-secondary::after {
+            content: " ›";
+            font-weight: 400;
+        }
+
+        .hero-visual {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 400px;
+            opacity: 0.03;
+            z-index: 1;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        /* Feature Sections */
+        .feature-section {
+            padding: 100px 0;
+            position: relative;
+            background: #fff;
+        }
+
+        .feature-section:nth-child(even) {
+            background: #f5f5f7;
+            color: #1d1d1f;
+        }
+
+        .feature-section:nth-child(even) .section-eyebrow {
+            color: #bf4800;
+        }
+
+        .feature-section:nth-child(even) .cta-secondary {
+            color: #0066cc;
+        }
+
+        .feature-container {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 0 40px;
+            text-align: center;
+        }
+
+        .section-eyebrow {
+            font-size: 17px;
+            line-height: 1.23536;
+            font-weight: 600;
+            letter-spacing: -0.022em;
+            color: #bf4800;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .section-headline {
+            font-size: 48px;
+            line-height: 1.08349;
+            font-weight: 600;
+            letter-spacing: -0.003em;
+            margin-bottom: 15px;
+        }
+
+        .section-subheadline {
+            font-size: 24px;
+            line-height: 1.16667;
+            font-weight: 600;
+            letter-spacing: 0.009em;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        .section-description {
+            font-size: 21px;
+            line-height: 1.381;
+            font-weight: 400;
+            letter-spacing: 0.011em;
+            margin-bottom: 40px;
+            opacity: 0.8;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .feature-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .feature-item h3 {
+            font-size: 24px;
+            line-height: 1.16667;
+            font-weight: 600;
+            letter-spacing: 0.009em;
+            margin-bottom: 12px;
+        }
+
+        .feature-item p {
+            font-size: 17px;
+            line-height: 1.47059;
+            font-weight: 400;
+            letter-spacing: -0.022em;
+            opacity: 0.8;
+        }
+
+        /* Technical Specs */
+        .specs-section {
+            background: #f5f5f7;
+            color: #1d1d1f;
+            padding: 100px 0;
+        }
+
+        .specs-container {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 60px;
+            margin-top: 60px;
+        }
+
+        .spec-category h4 {
+            font-size: 19px;
+            line-height: 1.21053;
+            font-weight: 600;
+            letter-spacing: 0.012em;
+            margin-bottom: 15px;
+            color: #1d1d1f;
+        }
+
+        .spec-list {
+            list-style: none;
+        }
+
+        .spec-list li {
+            font-size: 14px;
+            line-height: 1.42857;
+            font-weight: 400;
+            letter-spacing: -0.016em;
+            color: #86868b;
+            margin-bottom: 8px;
+            padding-left: 12px;
+            position: relative;
+        }
+
+        .spec-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #0071e3;
+        }
+
+        /* Availability Section */
+        .availability {
+            background: #f5f5f7;
+            color: #1d1d1f;
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .availability-container {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        .price-large {
+            font-size: 56px;
+            line-height: 1.07143;
+            font-weight: 600;
+            letter-spacing: -0.005em;
+            margin-bottom: 15px;
+        }
+
+        .availability-note {
+            font-size: 17px;
+            line-height: 1.47059;
+            font-weight: 400;
+            letter-spacing: -0.022em;
+            opacity: 0.8;
+            margin-bottom: 40px;
+        }
+
+        /* Footer */
+        .footer {
+            background: #f5f5f7;
+            color: #1d1d1f;
+            padding: 40px 0 20px;
+            border-top: 1px solid #d2d2d7;
+        }
+
+        .footer-content {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        .footer-legal {
+            font-size: 12px;
+            line-height: 1.33337;
+            color: #86868b;
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #424245;
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid #d2d2d7;
+            font-size: 12px;
+            color: #86868b;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            50% {
+                transform: translate(-50%, -50%) rotate(5deg) scale(1.05);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 60px;
+            }
+            
+            .section-headline {
+                font-size: 36px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-items {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 40px;
+            }
+            
+            .hero-subtitle {
+                font-size: 21px;
+            }
+            
+            .hero-description {
+                font-size: 17px;
+            }
+            
+            .section-headline {
+                font-size: 28px;
+            }
+            
+            .section-subheadline {
+                font-size: 19px;
+            }
+            
+            .section-description {
+                font-size: 17px;
+            }
+            
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+            
+            .feature-container,
+            .specs-container,
+            .availability-container {
+                padding: 0 20px;
+            }
+            
+            .feature-section {
+                padding: 60px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">🍎</a>
+            <ul class="nav-items">
+                <li><a href="#">Store</a></li>
+                <li><a href="#">Mac</a></li>
+                <li><a href="#">iPad</a></li>
+                <li><a href="#">iPhone</a></li>
+                <li><a href="#">Watch</a></li>
+                <li><a href="#">Vision</a></li>
+                <li><a href="#">AirPods</a></li>
+                <li><a href="#">TV & Home</a></li>
+                <li><a href="#">Entertainment</a></li>
+                <li><a href="#">Accessories</a></li>
+                <li><a href="#">Support</a></li>
+            </ul>
+            <div class="nav-right">
+                <a href="#" class="nav-search">🔍</a>
+                <a href="#" class="nav-bag">🛍</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <p class="hero-eyebrow">Introducing</p>
+            <h1>Apple Intelligence</h1>
+            <p class="hero-subtitle">Personal intelligence. Powerful privacy.</p>
+            <p class="hero-description">The most advanced AI companion ever created, designed to understand you better while keeping your data completely private.</p>
+            <div class="hero-cta">
+                <button class="cta-primary">Join the Waitlist</button>
+                <a href="#features" class="cta-secondary">Learn more</a>
+            </div>
+        </div>
+        <div class="hero-visual">🤖</div>
+    </section>
+
+    <!-- Features Section 1 -->
+    <section id="features" class="feature-section">
+        <div class="feature-container">
+            <p class="section-eyebrow">Intelligent by Design</p>
+            <h2 class="section-headline">Understands you.<br>Protects you.</h2>
+            <p class="section-description">Apple Intelligence learns how you work, communicate, and live — while keeping your personal information completely private on your device.</p>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="feature-icon">🧠</span>
+                    <h3>Contextual Awareness</h3>
+                    <p>Understands your habits, preferences, and routines to provide perfectly timed assistance.</p>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🔒</span>
+                    <h3>Private by Default</h3>
+                    <p>All processing happens on-device. Your data never leaves your iPhone, iPad, or Mac.</p>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">⚡</span>
+                    <h3>Proactive Intelligence</h3>
+                    <p>Anticipates what you need before you ask, seamlessly integrated across all your devices.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section 2 -->
+    <section class="feature-section">
+        <div class="feature-container">
+            <p class="section-eyebrow">Seamless Integration</p>
+            <h2 class="section-headline">Works everywhere.<br>Learns everything.</h2>
+            <p class="section-subheadline">Powered by Apple Silicon</p>
+            <p class="section-description">From writing emails to organizing your photos, Apple Intelligence transforms how you interact with technology across iPhone, iPad, and Mac.</p>
+            <a href="#" class="cta-secondary">See all capabilities</a>
+        </div>
+    </section>
+
+    <!-- Features Section 3 -->
+    <section class="feature-section">
+        <div class="feature-container">
+            <p class="section-eyebrow">Coming Soon</p>
+            <h2 class="section-headline">Advanced reasoning.<br>Creative collaboration.</h2>
+            <p class="section-description">Apple Intelligence will help you write, create, and solve problems in ways you never thought possible — all while maintaining the privacy you expect from Apple.</p>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="feature-icon">✍️</span>
+                    <h3>Writing Tools</h3>
+                    <p>Enhance your writing with intelligent suggestions, tone adjustments, and creative assistance.</p>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🎨</span>
+                    <h3>Creative Studio</h3>
+                    <p>Generate images, design layouts, and bring your creative visions to life with AI assistance.</p>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">📊</span>
+                    <h3>Data Insights</h3>
+                    <p>Discover patterns and insights in your personal data to make better decisions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Specs -->
+    <section class="specs-section">
+        <div class="specs-container">
+            <h2 class="section-headline">Tech Specs</h2>
+            <div class="specs-grid">
+                <div class="spec-category">
+                    <h4>System Requirements</h4>
+                    <ul class="spec-list">
+                        <li>iPhone 15 Pro or later</li>
+                        <li>iPad Pro (M1) or later</li>
+                        <li>MacBook Pro (M1) or later</li>
+                        <li>macOS Sequoia 15.4 or later</li>
+                        <li>iOS 18.4 or later</li>
+                        <li>iPadOS 18.4 or later</li>
+                    </ul>
+                </div>
+                <div class="spec-category">
+                    <h4>Languages</h4>
+                    <ul class="spec-list">
+                        <li>English (US, UK, AU, CA)</li>
+                        <li>Spanish (US, ES, MX)</li>
+                        <li>French (FR, CA)</li>
+                        <li>German</li>
+                        <li>Italian</li>
+                        <li>Portuguese (BR)</li>
+                        <li>Japanese</li>
+                        <li>Korean</li>
+                        <li>Chinese (Simplified, Traditional)</li>
+                    </ul>
+                </div>
+                <div class="spec-category">
+                    <h4>Privacy & Security</h4>
+                    <ul class="spec-list">
+                        <li>On-device processing</li>
+                        <li>Private Cloud Compute</li>
+                        <li>End-to-end encryption</li>
+                        <li>Secure Enclave protection</li>
+                        <li>Zero data collection</li>
+                        <li>Differential privacy</li>
+                    </ul>
+                </div>
+                <div class="spec-category">
+                    <h4>Core Features</h4>
+                    <ul class="spec-list">
+                        <li>Natural language processing</li>
+                        <li>Image understanding</li>
+                        <li>Predictive text and completion</li>
+                        <li>Smart scheduling</li>
+                        <li>Contextual suggestions</li>
+                        <li>Cross-app integration</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Availability -->
+    <section class="availability">
+        <div class="availability-container">
+            <p class="section-eyebrow">Coming</p>
+            <h2 class="section-headline">Spring 2025</h2>
+            <p class="price-large">Free</p>
+            <p class="availability-note">Available as a free software update for compatible devices.<br>Beta preview starts February 2025.</p>
+            <div class="hero-cta">
+                <button class="cta-primary">Get Notified</button>
+                <a href="#" class="cta-secondary">Developer Preview</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-legal">
+                Apple Intelligence requires compatible hardware and software. Features are subject to change. Some features may not be available in all regions or languages.
+            </div>
+            <div class="footer-links">
+                <a href="#">Shop and Learn</a>
+                <a href="#">Apple Store</a>
+                <a href="#">For Business</a>
+                <a href="#">For Education</a>
+                <a href="#">For Healthcare</a>
+                <a href="#">For Government</a>
+                <a href="#">Apple Values</a>
+                <a href="#">Accessibility</a>
+                <a href="#">Environment</a>
+                <a href="#">Privacy</a>
+                <a href="#">Investor Relations</a>
+            </div>
+            <div class="footer-bottom">
+                <div>Copyright © 2025 Apple Inc. All rights reserved.</div>
+                <div>
+                    <a href="#" style="color: #86868b; text-decoration: none;">Privacy Policy</a> | 
+                    <a href="#" style="color: #86868b; text-decoration: none; margin-left: 10px;">Terms of Use</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe feature sections
+        document.querySelectorAll('.feature-section, .specs-section, .availability').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Add parallax effect to hero background
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            const heroVisual = document.querySelector('.hero-visual');
+            
+            if (hero && heroVisual) {
+                const speed = scrolled * 0.3;
+                heroVisual.style.transform = `translate(-50%, -50%) rotate(${scrolled * 0.05}deg)`;
+            }
+        });
+
+        // Button interaction effects
+        document.querySelectorAll('.cta-primary').forEach(button => {
+            button.addEventListener('click', function(e) {
+                // Add ripple effect
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.cssText = `
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${x}px;
+                    top: ${y}px;
+                    position: absolute;
+                    border-radius: 50%;
+                    background: rgba(255, 255, 255, 0.3);
+                    transform: scale(0);
+                    animation: ripple 0.6s linear;
+                    pointer-events: none;
+                `;
+                
+                this.style.position = 'relative';
+                this.style.overflow = 'hidden';
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
