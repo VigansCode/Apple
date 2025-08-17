@@ -1,11 +1,4 @@
-<a href="#" class="nav-pumpfun">
-                        <img src="./pump.fun.png" alt="pump.fun" width="15" height="15" style="border-radius: 3px; object-fit: contain;">
-                    </a>
-                    <a href="#" class="nav-search">
-                        <svg width="15" height="15" viewBox="0 0 300 300" fill="none">
-                            <path d="M178.57 127.15 290.27 0h-26.46l-97.03 110.38L89.34 0H0l117.13 166.93L0 300.25h26.46l102.4-116.59 81.8 116.59H300M36.01 19.54H76.66l187.13 262.13h-40.66" fill="#1d1d1f"/>
-                        </svg>
-                    </a><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -22,9 +15,10 @@
             font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
             background: #f5f5f7;
             color: #1d1d1f;
-            overflow: hidden;
+            overflow: hidden; /* Prevent scrolling during loading */
         }
 
+        /* Loading Screen */
         .loading-screen {
             position: fixed;
             top: 0;
@@ -102,6 +96,7 @@
             to { width: 100%; }
         }
 
+        /* Main Content - Initially Hidden */
         .main-container {
             opacity: 0;
             transition: opacity 0.8s ease;
@@ -111,6 +106,7 @@
             opacity: 1;
         }
 
+        /* Navigation */
         .nav {
             background: rgba(251, 251, 253, 0.8);
             backdrop-filter: saturate(180%) blur(20px);
@@ -166,27 +162,16 @@
         .nav-right {
             display: flex;
             gap: 24px;
-            align-items: center;
         }
 
-        .nav-search, .nav-pumpfun, .nav-ca {
+        .nav-search, .nav-ca {
             color: #1d1d1f;
             text-decoration: none;
             font-size: 16px;
             transition: opacity 0.3s ease;
-            display: flex;
-            align-items: center;
         }
 
-        .nav-pumpfun img {
-            width: 15px;
-            height: 15px;
-            border-radius: 3px;
-            object-fit: contain;
-            display: block;
-        }
-
-        .nav-search:hover, .nav-pumpfun:hover {
+        .nav-search:hover {
             opacity: 0.7;
         }
 
@@ -195,12 +180,14 @@
             font-weight: 400;
         }
 
+        /* Main Content Area */
         .main-content {
             min-height: calc(100vh - 44px);
             background: #f5f5f7;
             padding: 60px 22px;
         }
 
+        /* AI Terminal Section */
         .ai-terminal {
             max-width: 980px;
             margin: 0 auto;
@@ -228,6 +215,7 @@
             margin-right: auto;
         }
 
+        /* 3D Model Container */
         .model-container {
             width: 100%;
             max-width: 600px;
@@ -267,6 +255,7 @@
             50% { opacity: 1; }
         }
 
+        /* Chat Interface */
         .chat-interface {
             width: 100%;
             max-width: 600px;
@@ -418,6 +407,7 @@
             fill: #fff;
         }
 
+        /* Status Text */
         .status-text {
             margin-top: 20px;
             font-size: 14px;
@@ -444,6 +434,7 @@
             50% { opacity: 1; transform: scale(1.2); }
         }
 
+        /* Responsive */
         @media (max-width: 768px) {
             .nav-items {
                 display: none;
@@ -472,6 +463,7 @@
             }
         }
 
+        /* Info Modal */
         .info-modal {
             position: fixed;
             top: 0;
@@ -561,6 +553,7 @@
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-content">
             <svg class="loading-apple-logo" viewBox="0 0 814 1000">
@@ -572,7 +565,9 @@
         </div>
     </div>
 
+    <!-- Main Container - Initially Hidden -->
     <div class="main-container" id="mainContainer">
+        <!-- Navigation -->
         <nav class="nav">
             <div class="nav-inner">
                 <a href="#" class="nav-logo">
@@ -586,9 +581,6 @@
                     <li><a href="#" onclick="showInfoModal('support')">Support</a></li>
                 </ul>
                 <div class="nav-right">
-                    <a href="#" class="nav-pumpfun">
-                        <img src="./pump.fun.png" alt="pump.fun" width="35" height="35" style="border-radius: 5px; object-fit: contain;">
-                    </a>
                     <a href="#" class="nav-search">
                         <svg width="15" height="15" viewBox="0 0 300 300" fill="none">
                             <path d="M178.57 127.15 290.27 0h-26.46l-97.03 110.38L89.34 0H0l117.13 166.93L0 300.25h26.46l102.4-116.59 81.8 116.59H300M36.01 19.54H76.66l187.13 262.13h-40.66" fill="#1d1d1f"/>
@@ -599,15 +591,18 @@
             </div>
         </nav>
 
+        <!-- Main Content -->
         <main class="main-content">
             <section class="ai-terminal">
                 <h1 class="terminal-title">iCompanion</h1>
                 <p class="terminal-subtitle">Experience the future of personal intelligence. Your iCompanion is ready to assist.</p>
                 
+                <!-- 3D Model Container -->
                 <div class="model-container" id="modelContainer">
                     <p class="model-placeholder">3D iCompanion Model will load here</p>
                 </div>
                 
+                <!-- Chat Interface -->
                 <div class="chat-interface">
                     <div class="chat-messages" id="chatMessages"></div>
                     
@@ -635,6 +630,7 @@
         </main>
     </div>
 
+    <!-- Info Modal -->
     <div class="info-modal" id="infoModal">
         <div class="info-modal-content">
             <h2 class="info-modal-title" id="modalTitle">Title</h2>
@@ -646,22 +642,30 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script>
+        // Loading Screen Logic
         window.addEventListener('load', function() {
+            // Ensure loading screen shows for at least 2 seconds
             setTimeout(() => {
                 const loadingScreen = document.getElementById('loadingScreen');
                 const mainContainer = document.getElementById('mainContainer');
                 
+                // Hide loading screen
                 loadingScreen.classList.add('hidden');
                 
+                // Show main content
                 setTimeout(() => {
                     mainContainer.classList.add('visible');
+                    // Re-enable scrolling
                     document.body.style.overflow = 'auto';
+                    
+                    // Initialize Three.js after loading screen is gone
                     initThreeJS();
-                }, 200);
+                }, 200); // Small delay for smooth transition
                 
-            }, 2000);
+            }, 2000); // 2 second loading time
         });
 
+        // Chat functionality
         const chatInput = document.getElementById('chatInput');
         const sendButton = document.getElementById('sendButton');
         const chatMessages = document.getElementById('chatMessages');
@@ -671,6 +675,7 @@
             this.style.height = Math.min(this.scrollHeight, 120) + 'px';
         });
         
+        // Add message to chat
         function addMessage(content, isUser = false) {
             const message = document.createElement('div');
             message.className = `message ${isUser ? 'user' : 'assistant'}`;
@@ -681,6 +686,7 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
         
+        // Call Anthropic API through backend
         async function callAnthropicAPI(userMessage) {
             try {
                 const response = await fetch('/api/chat', {
@@ -706,15 +712,19 @@
             }
         }
         
+        // Send message functionality
         async function sendMessage() {
             const message = chatInput.value.trim();
             if (message && !sendButton.disabled) {
+                // Add user message
                 addMessage(message, true);
                 chatInput.value = '';
                 chatInput.style.height = 'auto';
                 
+                // Disable button while processing
                 sendButton.disabled = true;
                 
+                // Show loading indicator with animated dots
                 const loadingMessage = document.createElement('div');
                 loadingMessage.className = 'message loading';
                 loadingMessage.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
@@ -722,14 +732,23 @@
                 chatMessages.scrollTop = chatMessages.scrollHeight;
                 
                 try {
+                    // Get AI response from API
                     const response = await callAnthropicAPI(message);
+                    
+                    // Remove loading message
                     loadingMessage.remove();
+                    
+                    // Add real API response
                     addMessage(response, false);
                 } catch (error) {
+                    // Remove loading message
                     loadingMessage.remove();
+                    
+                    // Show error message
                     addMessage('Sorry, I\'m having trouble connecting right now. Please try again.', false);
                 }
                 
+                // Re-enable button
                 sendButton.disabled = false;
             }
         }
@@ -743,17 +762,21 @@
             }
         });
 
+        // Global variable to track typewriter
         let typewriterTimeout;
         
         function typewriterEffect(element, text, speed = 15) {
+            // Clear any existing typewriter
             if (typewriterTimeout) {
                 clearTimeout(typewriterTimeout);
             }
             
+            // Completely clear and reset the element
             element.innerHTML = '';
             element.textContent = '';
             element.classList.remove('typing');
             
+            // Small delay to ensure clearing is complete
             setTimeout(() => {
                 element.classList.add('typing');
                 let i = 0;
@@ -773,6 +796,7 @@
         }
         
         function closeInfoModal() {
+            // Stop any running typewriter
             if (typewriterTimeout) {
                 clearTimeout(typewriterTimeout);
                 typewriterTimeout = null;
@@ -781,6 +805,7 @@
             const modal = document.getElementById('infoModal');
             const text = document.getElementById('modalText');
             
+            // Clean up the text element
             text.innerHTML = '';
             text.textContent = '';
             text.classList.remove('typing');
@@ -788,6 +813,7 @@
             modal.classList.remove('visible');
         }
         
+        // Info Modal Functions
         function showInfoModal(type) {
             const modal = document.getElementById('infoModal');
             const title = document.getElementById('modalTitle');
@@ -806,7 +832,7 @@
                     break;
                 case 'support':
                     title.textContent = 'Support';
-                    description = 'Need help with your iCompanion?\n\nOur support team is here to assist you 24/7. Whether you\'re experiencing technical difficulties, need setup assistance, or have questions about privacy and security, we\'re here to help.\n\nContact Methods:\n• Live Chat: Available instantly through your iCompanion interface\n• Phone Support: 1-800-APL-CARE (275-2273)\n• Genius Bar: Schedule an appointment at your local Apple Store\n• Online Resources: support.apple.com/icompanion\n\nCommon Solutions:\n• Restart your iCompanion by saying "Hey Siri, restart iCompanion"\n• Check your internet connection for optimal performance\n• Ensure all Apple devices are signed into the same Apple ID\n• Update to the latest software versions across all devices\n\nPrivacy & Security:\nYour conversations with iCompanion are processed using on-device intelligence and Apple\'s Private Cloud Compute. Personal data never leaves your ecosystem without explicit permission.\n\nFor enterprise customers, dedicated business support is available through Apple Business Essentials.\n\nYour privacy. Our priority. Always.';
+                    description = 'Add your Support description here.';
                     break;
             }
             
@@ -814,37 +840,44 @@
             typewriterEffect(text, description);
         }
         
+        // Close modal when clicking outside
         document.getElementById('infoModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeInfoModal();
             }
         });
         
+        // Close modal with Escape key
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeInfoModal();
             }
         });
         
+        // Three.js Scene Setup
         const modelContainer = document.getElementById('modelContainer');
         let scene, camera, renderer, robot, mixer;
         
         function initThreeJS() {
             console.log('Initializing Three.js...');
             
+            // Scene
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0xffffff);
             
+            // Camera
             camera = new THREE.PerspectiveCamera(75, 600/400, 0.1, 1000);
             camera.position.set(0, 0, 3.2);
             camera.lookAt(0, 0, 0);
             
+            // Renderer
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(600, 400);
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.shadowMap.enabled = true;
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
             
+            // Lighting
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
             scene.add(ambientLight);
             
@@ -853,9 +886,11 @@
             directionalLight.castShadow = true;
             scene.add(directionalLight);
             
+            // Clear placeholder and add renderer
             modelContainer.innerHTML = '';
             modelContainer.appendChild(renderer.domElement);
             
+            // Update placeholder to show loading
             const loadingText = document.createElement('p');
             loadingText.className = 'model-placeholder';
             loadingText.textContent = 'Loading robot model...';
@@ -867,6 +902,7 @@
             modelContainer.style.position = 'relative';
             modelContainer.appendChild(loadingText);
             
+            // Load GLB Model
             console.log('Loading robot.glb...');
             const loader = new THREE.GLTFLoader();
             
@@ -875,13 +911,16 @@
                 function(gltf) {
                     console.log('GLB loaded successfully!', gltf);
                     
+                    // Remove loading text
                     if (loadingText) loadingText.remove();
                     
                     robot = gltf.scene;
                     
+                    // Scale and position the robot
                     robot.scale.set(4, 4, 4);
                     robot.position.set(0, -1.8, 0);
                     
+                    // Enable shadows
                     robot.traverse(function(child) {
                         if (child.isMesh) {
                             child.castShadow = true;
@@ -892,6 +931,7 @@
                     scene.add(robot);
                     console.log('Robot added to scene');
                     
+                    // Start animation if available
                     if (gltf.animations && gltf.animations.length > 0) {
                         console.log('Found animations:', gltf.animations.length);
                         mixer = new THREE.AnimationMixer(robot);
@@ -899,6 +939,7 @@
                         action.play();
                     }
                     
+                    // Start render loop
                     animate();
                 },
                 function(progress) {
@@ -921,9 +962,10 @@
                 requestAnimationFrame(animate);
                 
                 if (mixer) {
-                    mixer.update(0.016);
+                    mixer.update(0.016); // ~60fps
                 }
                 
+                // Rotate robot slowly
                 if (robot) {
                     robot.rotation.y += 0.01;
                 }
@@ -932,6 +974,7 @@
             }
         }
         
+        // Handle window resize
         window.addEventListener('resize', function() {
             if (camera && renderer) {
                 camera.aspect = 600 / 400;
