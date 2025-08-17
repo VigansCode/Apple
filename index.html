@@ -345,78 +345,7 @@
             50% { opacity: 1; transform: scale(1.2); }
         }
 
-        /* Loading Screen - Apple Style */
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            opacity: 1;
-            visibility: visible;
-            transition: opacity 1s ease, visibility 1s ease;
-        }
-
-        .loading-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .apple-boot-logo {
-            width: 80px;
-            height: 95px;
-            fill: #ffffff;
-            margin-bottom: 60px;
-            opacity: 0.9;
-        }
-
-        .apple-loading-bar {
-            width: 120px;
-            height: 3px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 2px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .apple-loading-progress {
-            height: 100%;
-            background: #ffffff;
-            border-radius: 2px;
-            width: 0%;
-            animation: appleProgress 3s ease-out forwards;
-        }
-
-        @keyframes appleProgress {
-            0% { width: 0%; }
-            20% { width: 25%; }
-            40% { width: 45%; }
-            60% { width: 70%; }
-            80% { width: 85%; }
-            100% { width: 100%; }
-        }
-
-        /* Hide main content initially */
-        body.loading .nav,
-        body.loading .main-content,
-        body.loading .info-modal {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        body:not(.loading) .nav,
-        body:not(.loading) .main-content,
-        body:not(.loading) .info-modal {
-            opacity: 1;
-            visibility: visible;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
+        /* Responsive */
         @media (max-width: 768px) {
             .nav-items {
                 renderer.render(scene, camera);
@@ -435,21 +364,8 @@
         // Initialize Three.js when page loads
         window.addEventListener('load', function() {
             console.log('Page loaded, starting Three.js initialization...');
-            
-            // Wait for everything to load, then hide loading screen
-            setTimeout(() => {
-                const loadingScreen = document.getElementById('loadingScreen');
-                const body = document.body;
-                
-                loadingScreen.classList.add('hidden');
-                body.classList.remove('loading');
-            }, 3500); // Matches the progress bar animation
-            
             initThreeJS();
         });
-    </script>
-</body>
-</html>
     </script>
 </body>
 </html>display: none;
@@ -554,7 +470,7 @@
         }
     </style>
 </head>
-<body class="loading">
+<body>
     <!-- Navigation -->
     <nav class="nav">
         <div class="nav-inner">
@@ -576,16 +492,6 @@
                 </a>
                 <span class="nav-ca">CA:</span>
             </div>
-
-    <!-- Apple Boot Loading Screen -->
-    <div class="loading-screen" id="loadingScreen">
-        <svg class="apple-boot-logo" viewBox="0 0 814 1000">
-            <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76.5 0-103.7 40.8-165.9 40.8s-105.6-57-155.5-127C46.7 790.7 0 663 0 541.8c0-194.4 126.4-297.5 250.8-297.5 65.6 0 120.5 43.9 162.2 43.9 40.8 0 103.9-47.18 180.8-47.18 29.6 0 137.3 2.64 186.8 99.64zm-144.4-268.3c35.2-42.5 58.9-101.4 58.9-160.4 0-8.2-.9-16.4-2.6-23.5-56.3 2.6-124.7 37.4-165.8 85.7-33.8 39.2-65.6 101.4-65.6 160.9 0 9.1.9 18.3 1.5 21.1 2.6.6 6.7.9 10.9.9 50.3 0 114.8-33.8 162.7-84.7z"/>
-        </svg>
-        <div class="apple-loading-bar">
-            <div class="apple-loading-progress"></div>
-        </div>
-    </div>
         </div>
     </nav>
 
