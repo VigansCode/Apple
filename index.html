@@ -15,6 +15,59 @@
             font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
             background: #f5f5f7;
             color: #1d1d1f;
+            overflow: hidden; /* Prevent scrolling during loading */
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-apple-logo {
+            width: 60px;
+            height: 74px;
+            fill: #fff;
+            animation: logoFade 2s ease-in-out;
+        }
+
+        @keyframes logoFade {
+            0% { 
+                opacity: 0; 
+                transform: scale(0.8);
+            }
+            50% { 
+                opacity: 1; 
+                transform: scale(1);
+            }
+            100% { 
+                opacity: 1; 
+                transform: scale(1);
+            }
+        }
+
+        /* Main Content - Initially Hidden */
+        .main-container {
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        .main-container.visible {
+            opacity: 1;
         }
 
         /* Navigation */
@@ -359,6 +412,11 @@
                 height: 300px;
                 max-width: 100%;
             }
+
+            .loading-apple-logo {
+                width: 50px;
+                height: 62px;
+            }
         }
 
         /* Info Modal */
@@ -451,67 +509,77 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="nav">
-        <div class="nav-inner">
-            <a href="#" class="nav-logo">
-                <svg class="apple-logo" viewBox="0 0 814 1000">
-                    <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76.5 0-103.7 40.8-165.9 40.8s-105.6-57-155.5-127C46.7 790.7 0 663 0 541.8c0-194.4 126.4-297.5 250.8-297.5 65.6 0 120.5 43.9 162.2 43.9 40.8 0 103.9-47.18 180.8-47.18 29.6 0 137.3 2.64 186.8 99.64zm-144.4-268.3c35.2-42.5 58.9-101.4 58.9-160.4 0-8.2-.9-16.4-2.6-23.5-56.3 2.6-124.7 37.4-165.8 85.7-33.8 39.2-65.6 101.4-65.6 160.9 0 9.1.9 18.3 1.5 21.1 2.6.6 6.7.9 10.9.9 50.3 0 114.8-33.8 162.7-84.7z"/>
-                </svg>
-            </a>
-            <ul class="nav-items">
-                <li><a href="#" onclick="showInfoModal('vision')">Vision</a></li>
-                <li><a href="#" onclick="showInfoModal('companion')">Companion</a></li>
-                <li><a href="#" onclick="showInfoModal('support')">Support</a></li>
-            </ul>
-            <div class="nav-right">
-                <a href="#" class="nav-search">
-                    <svg width="15" height="15" viewBox="0 0 300 300" fill="none">
-                        <path d="M178.57 127.15 290.27 0h-26.46l-97.03 110.38L89.34 0H0l117.13 166.93L0 300.25h26.46l102.4-116.59 81.8 116.59H300M36.01 19.54H76.66l187.13 262.13h-40.66" fill="#1d1d1f"/>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <svg class="loading-apple-logo" viewBox="0 0 814 1000">
+            <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76.5 0-103.7 40.8-165.9 40.8s-105.6-57-155.5-127C46.7 790.7 0 663 0 541.8c0-194.4 126.4-297.5 250.8-297.5 65.6 0 120.5 43.9 162.2 43.9 40.8 0 103.9-47.18 180.8-47.18 29.6 0 137.3 2.64 186.8 99.64zm-144.4-268.3c35.2-42.5 58.9-101.4 58.9-160.4 0-8.2-.9-16.4-2.6-23.5-56.3 2.6-124.7 37.4-165.8 85.7-33.8 39.2-65.6 101.4-65.6 160.9 0 9.1.9 18.3 1.5 21.1 2.6.6 6.7.9 10.9.9 50.3 0 114.8-33.8 162.7-84.7z"/>
+        </svg>
+    </div>
+
+    <!-- Main Container - Initially Hidden -->
+    <div class="main-container" id="mainContainer">
+        <!-- Navigation -->
+        <nav class="nav">
+            <div class="nav-inner">
+                <a href="#" class="nav-logo">
+                    <svg class="apple-logo" viewBox="0 0 814 1000">
+                        <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76.5 0-103.7 40.8-165.9 40.8s-105.6-57-155.5-127C46.7 790.7 0 663 0 541.8c0-194.4 126.4-297.5 250.8-297.5 65.6 0 120.5 43.9 162.2 43.9 40.8 0 103.9-47.18 180.8-47.18 29.6 0 137.3 2.64 186.8 99.64zm-144.4-268.3c35.2-42.5 58.9-101.4 58.9-160.4 0-8.2-.9-16.4-2.6-23.5-56.3 2.6-124.7 37.4-165.8 85.7-33.8 39.2-65.6 101.4-65.6 160.9 0 9.1.9 18.3 1.5 21.1 2.6.6 6.7.9 10.9.9 50.3 0 114.8-33.8 162.7-84.7z"/>
                     </svg>
                 </a>
-                <span class="nav-ca">CA:</span>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="main-content">
-        <section class="ai-terminal">
-            <h1 class="terminal-title">iCompanion</h1>
-            <p class="terminal-subtitle">Experience the future of personal intelligence. Your iCompanion is ready to assist.</p>
-            
-            <!-- 3D Model Container -->
-            <div class="model-container" id="modelContainer">
-                <p class="model-placeholder">3D iCompanion Model will load here</p>
-            </div>
-            
-            <!-- Chat Interface -->
-            <div class="chat-interface">
-                <div class="chat-messages" id="chatMessages"></div>
-                
-                <div class="chat-input-container">
-                    <textarea 
-                        class="chat-input" 
-                        placeholder="Ask your iCompanion anything..."
-                        rows="1"
-                        id="chatInput"
-                    ></textarea>
-                    <button class="send-button" id="sendButton">
-                        <svg viewBox="0 0 24 24" fill="none">
-                            <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <ul class="nav-items">
+                    <li><a href="#" onclick="showInfoModal('vision')">Vision</a></li>
+                    <li><a href="#" onclick="showInfoModal('companion')">Companion</a></li>
+                    <li><a href="#" onclick="showInfoModal('support')">Support</a></li>
+                </ul>
+                <div class="nav-right">
+                    <a href="#" class="nav-search">
+                        <svg width="15" height="15" viewBox="0 0 300 300" fill="none">
+                            <path d="M178.57 127.15 290.27 0h-26.46l-97.03 110.38L89.34 0H0l117.13 166.93L0 300.25h26.46l102.4-116.59 81.8 116.59H300M36.01 19.54H76.66l187.13 262.13h-40.66" fill="#1d1d1f"/>
                         </svg>
-                    </button>
-                </div>
-                
-                <div class="status-text">
-                    <div class="status-indicator"></div>
-                    Ready to help • Privacy protected
+                    </a>
+                    <span class="nav-ca">CA:</span>
                 </div>
             </div>
-        </section>
-    </main>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <section class="ai-terminal">
+                <h1 class="terminal-title">iCompanion</h1>
+                <p class="terminal-subtitle">Experience the future of personal intelligence. Your iCompanion is ready to assist.</p>
+                
+                <!-- 3D Model Container -->
+                <div class="model-container" id="modelContainer">
+                    <p class="model-placeholder">3D iCompanion Model will load here</p>
+                </div>
+                
+                <!-- Chat Interface -->
+                <div class="chat-interface">
+                    <div class="chat-messages" id="chatMessages"></div>
+                    
+                    <div class="chat-input-container">
+                        <textarea 
+                            class="chat-input" 
+                            placeholder="Ask your iCompanion anything..."
+                            rows="1"
+                            id="chatInput"
+                        ></textarea>
+                        <button class="send-button" id="sendButton">
+                            <svg viewBox="0 0 24 24" fill="none">
+                                <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div class="status-text">
+                        <div class="status-indicator"></div>
+                        Ready to help • Privacy protected
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
 
     <!-- Info Modal -->
     <div class="info-modal" id="infoModal">
@@ -525,6 +593,29 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script>
+        // Loading Screen Logic
+        window.addEventListener('load', function() {
+            // Ensure loading screen shows for at least 2 seconds
+            setTimeout(() => {
+                const loadingScreen = document.getElementById('loadingScreen');
+                const mainContainer = document.getElementById('mainContainer');
+                
+                // Hide loading screen
+                loadingScreen.classList.add('hidden');
+                
+                // Show main content
+                setTimeout(() => {
+                    mainContainer.classList.add('visible');
+                    // Re-enable scrolling
+                    document.body.style.overflow = 'auto';
+                    
+                    // Initialize Three.js after loading screen is gone
+                    initThreeJS();
+                }, 200); // Small delay for smooth transition
+                
+            }, 2000); // 2 second loading time
+        });
+
         // Chat functionality
         const chatInput = document.getElementById('chatInput');
         const sendButton = document.getElementById('sendButton');
@@ -841,12 +932,6 @@
                 camera.updateProjectionMatrix();
                 renderer.setSize(600, 400);
             }
-        });
-        
-        // Initialize Three.js when page loads
-        window.addEventListener('load', function() {
-            console.log('Page loaded, starting Three.js initialization...');
-            initThreeJS();
         });
     </script>
 </body>
