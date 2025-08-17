@@ -406,7 +406,16 @@
         body.loading .nav,
         body.loading .main-content,
         body.loading .info-modal {
-            display: none;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        body:not(.loading) .nav,
+        body:not(.loading) .main-content,
+        body:not(.loading) .info-modal {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
         }
         @media (max-width: 768px) {
             .nav-items {
