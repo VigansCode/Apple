@@ -1,3 +1,4 @@
+@@ -1,83 +1,938 @@
 export default async function handler(req, res) {
   // Enable CORS for your domain
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -56,28 +57,3 @@ export default async function handler(req, res) {
       if (response.status === 429) {
         return res.status(429).json({ 
           error: 'Rate limit exceeded. Please wait a moment and try again.' 
-        });
-      }
-      
-      return res.status(500).json({ 
-        error: 'Sorry, I\'m experiencing some technical difficulties. Please try again.' 
-      });
-    }
-
-    const data = await response.json();
-    
-    if (!data.content || !data.content[0] || !data.content[0].text) {
-      return res.status(500).json({ 
-        error: 'Unexpected response format from AI service.' 
-      });
-    }
-
-    res.json({ response: data.content[0].text });
-
-  } catch (error) {
-    console.error('API Error:', error);
-    res.status(500).json({ 
-      error: 'Internal server error. Please try again later.' 
-    });
-  }
-}
